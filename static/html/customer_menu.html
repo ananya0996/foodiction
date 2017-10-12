@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>Menu</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/customer_menu.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src = "/js/customer_menu.js"></script>
+</head>
+<body onload = "putItems()">
+<div class = "container-fluid">
+	<div class = "row" id = "nav">
+		<div class="row" style = "height: 50px; color: black; font-size: 14pt">
+			<div class="col-sm-12" style = "text-align: center">Menu</div>
+		</div>
+	</div>
+	<div class = "row">
+		<div class = "col-sm-9">
+			<table class = "table table-striped">
+				<thead>
+					<tr>
+						<th>Image</th>
+						<th>Item</th>
+						<th>Rate</th>
+						<th>Quantity</th>
+						<th>Add to cart</th>
+					</tr>
+				</thead>
+				<tbody id = "tbody">
+				</tbody>
+			</table>
+		</div>
+		<div class = "col-sm-3 cart">
+			<h3>Your Cart</h3>
+			<table class = "table table-striped">
+				<thead>
+					<tr>
+						<th>Item</th>
+						<th>Qty.</th>
+						<th>Amount</th>
+					</tr>
+				</thead>
+				<tbody id = "cartTbody">
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2" style = "font-weight: bold">Total:</td>
+						<td style = "font-weight: bold" id = "total">0</td>
+					</tr>
+				</tfoot>
+			</table>
+			<button id = "checkout" class = "addbutton" onclick = "checkout()">Proceed to Checkout</button>
+		</div>
+	</div>
+</div>
+</body>
+</html>

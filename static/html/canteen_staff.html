@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title> Canteen Side System </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/canteen_staff.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		</head>
+	<body>
+		<center class = "bgheading"><h1> FOODICTION SERVICES <h1></center>
+		<br/><br/><br/>
+		<center>
+			<p class = "welcome"><img src = "/images/food.png" width = "50px" height = "50px"/> Welcome Staff: <span><!--name of employee based on db --> </span><img src = "/images/food.png" width = "50px" height = "50px"/></p>
+
+			<br/>
+			<p class = "welcome">What would you like to do?</p>
+
+			<br/><br/><br/>
+			<form>
+				<input type = "button" class = "btn-lg" name = "Orders" id = "Orders" value = "Orders" onclick = "location.href = '/canteen/orders'"/>
+				<br/><br/>
+				<input type = "button" class = "btn-lg" name = "EditMenu" id = "EditMenu" value = "Edit Menu" onclick = "location.href = '/canteen/menu'"/>
+				<br/><br/>
+				<input type = "button" class = "btn-lg" name = "CheckInventory" id = "CheckInventory" value = "Check Inventory" onclick = "location.href = 'CheckInventory.html'"/>
+				<br/><br/>
+			</form>
+		</center>
+	</body>
+</html>
