@@ -7,6 +7,7 @@ module.exports = function(db) {
   // Item API Routes
 
   const itemsCollection = db.collection('items');
+  const masterMenuItemsCollection = db.collection('master_menu_items');
 
   // get all items
   router.get('/', function(req, res) {
@@ -18,9 +19,30 @@ module.exports = function(db) {
     });
   });
 
+  // get master menu items
+  router.get('/master_menu_items', function(req, res) {
+    masterMenuItemsCollection.find({}).toArray(function(err, items) {
+      if(err) {
+        res.json({'error': 'Unable to fetch items'});
+      }
+      res.json({'success': items});
+    });
+  });
+
   // create new item
   router.post('/', function(req, res) {
     itemsCollection.insert({name: req.body.name, rate: req.body.rate}, function(err, result) {
+      if(err) {
+        res.json({'error': 'Unable to insert item'});
+      }
+
+      res.json({'success': result.insertedIds[0]});
+    });
+  });
+
+  // create new master menu item
+  router.post('/master_menu_item', function(req, res) {
+    masterMenuItemsCollection.insert({name: req.body.name, rate: req.body.rate}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
@@ -48,6 +70,17 @@ module.exports = function(db) {
   // delete particular item
   router.delete('/:id', function(req, res) {
     itemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
+      if(err) {
+        res.json({'error': `Unable to delete item ${req.params.id}`});
+      }
+
+      res.json({'success': `Removed item ${req.params.id}`});
+    });
+  });
+
+  // delete particular master menu item
+  router.delete('/master_menu_item/:id', function(req, res) {  
+    masterMenuItemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
       if(err) {
         res.json({'error': `Unable to delete item ${req.params.id}`});
       }
