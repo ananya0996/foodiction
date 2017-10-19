@@ -133,13 +133,8 @@ function RemoveMasterMenuItem() {
 			}
 		}
 	}
+	
 	xhr.open('delete', '/api/item/master_menu_item/' + itemId);
-	// xhr.setRequestHeader('Content-Type', 'application/json');
-	// xhr.send(JSON.stringify({
-	// 	id: itemId
-	// }));
-
 	xhr.send(null);
 
-	// fetchMasterMenuItems();
 }

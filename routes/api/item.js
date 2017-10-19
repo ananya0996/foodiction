@@ -28,15 +28,15 @@ module.exports = function(db) {
       res.json({'success': items});
     });
   });
-
+//   itemsCollection.update({name: req.body.name, rate: req.body.rate, date: req.body.date}, { $set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, function(err, result)
   // create new item
   router.post('/', function(req, res) {
-    itemsCollection.insert({name: req.body.name, rate: req.body.rate}, function(err, result) {
+    itemsCollection.updateMany({name: req.body.name, rate: req.body.rate, date: req.body.date}, {$set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, {"upsert" : true}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
 
-      res.json({'success': result.insertedIds[0]});
+      res.json({'success': result.updatedIds[0]});
     });
   });
 
