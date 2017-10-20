@@ -31,23 +31,26 @@ module.exports = function(db) {
 //   itemsCollection.update({name: req.body.name, rate: req.body.rate, date: req.body.date}, { $set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, function(err, result)
   // create new item
   router.post('/', function(req, res) {
-    itemsCollection.updateMany({name: req.body.name, rate: req.body.rate, date: req.body.date}, {$set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, {"upsert" : true}, function(err, result) {
+    itemsCollection.updateOne({name: req.body.name, rate: req.body.rate, date: req.body.date}, {$set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, {"upsert" : true}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
 
-      res.json({'success': result.updatedIds[0]});
+	  console.log(result);
+      res.json({'success': result.upsertedID});
     });
   });
 
   // create new master menu item
   router.post('/master_menu_item', function(req, res) {
-    masterMenuItemsCollection.insert({name: req.body.name, rate: req.body.rate}, function(err, result) {
+    masterMenuItemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate}}, {"upsert" : true}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
-
-      res.json({'success': result.insertedIds[0]});
+	  
+	  console.log(result);
+	  res.json({'success': result.upsertedID});
+	  
     });
   });
 
