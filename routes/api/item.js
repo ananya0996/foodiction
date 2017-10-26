@@ -7,11 +7,10 @@ module.exports = function(db) {
   // Item API Routes
 
   const itemsCollection = db.collection('items');
-  const masterMenuItemsCollection = db.collection('master_menu_items');
 
   // get all items
   router.get('/', function(req, res) {
-    itemsCollection.find({}).toArray(function(err, items) {
+    itemsCollection.find({indailymenu : true}).toArray(function(err, items) {
       if(err) {
         res.json({'error': 'Unable to fetch items'});
       }
@@ -21,7 +20,7 @@ module.exports = function(db) {
 
   // get master menu items
   router.get('/master_menu_items', function(req, res) {
-    masterMenuItemsCollection.find({}).toArray(function(err, items) {
+    itemsCollection.find({}).toArray(function(err, items) {
       if(err) {
         res.json({'error': 'Unable to fetch items'});
       }
@@ -31,7 +30,7 @@ module.exports = function(db) {
 //   itemsCollection.update({name: req.body.name, rate: req.body.rate, date: req.body.date}, { $set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, function(err, result)
   // create new item
   router.post('/', function(req, res) {
-    itemsCollection.updateOne({name: req.body.name, rate: req.body.rate, date: req.body.date}, {$set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, {"upsert" : true}, function(err, result) {
+    itemsCollection.updateOne({_id: ObjectID(req.body.id)}, {$set: {indailymenu : true}}, {"upsert" : true}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
@@ -43,7 +42,7 @@ module.exports = function(db) {
 
   // create new master menu item
   router.post('/master_menu_item', function(req, res) {
-    masterMenuItemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate}}, {"upsert" : true}, function(err, result) {
+    itemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate, indailymenu : false}}, {"upsert" : true}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
@@ -72,7 +71,7 @@ module.exports = function(db) {
 
   // delete particular item
   router.delete('/:id', function(req, res) {
-    itemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
+    itemsCollection.updateOne({_id: ObjectID(req.params.id)}, {$set: {indailymenu : false}}, function(err, item) {
       if(err) {
         res.json({'error': `Unable to delete item ${req.params.id}`});
       }
@@ -83,7 +82,7 @@ module.exports = function(db) {
 
   // delete particular master menu item
   router.delete('/master_menu_item/:id', function(req, res) {  
-    masterMenuItemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
+    itemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
       if(err) {
         res.json({'error': `Unable to delete item ${req.params.id}`});
       }
