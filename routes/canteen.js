@@ -31,7 +31,7 @@ module.exports = function(db, wss) {
 
   // inventory management page
   router.get('/inventory', function(req, res) {
-
+    res.sendFile('html/check_inventory.html', {root: path.join(__dirname, '../static/')});
   });
 
   // menu updation page
