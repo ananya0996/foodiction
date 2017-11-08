@@ -1,12 +1,26 @@
 function setupOrders() {
 	const ws = new WebSocket('ws://localhost:8888');
-	ws.addEventListener('message', ({data}) => {
-		data = JSON.parse(data);
-		if(data.newOrder) {
-			console.log('here');
-			addOrder(data.newOrder);
+	
+	let itemsMap = null;
+	const initXhr = new XMLHttpRequest();
+	initXhr.open('get', '/api/item');
+	initXhr.onreadystatechange = function() {
+		if(initXhr.readyState === 4 && initXhr.status === 200) {
+			const response = JSON.parse(initXhr.responseText);
+			if(response.success) {
+				itemsArray = response.success;
+				itemsMap = new Map(itemsArray.map(({_id, name}) => [_id, name]));
+				ws.addEventListener('message', ({data}) => {
+					data = JSON.parse(data);
+					if(data.newOrder) {
+						console.log('here');
+						addOrder(data.newOrder);
+					}
+				});
+			}
 		}
-	});
+	};
+	initXhr.send();
 
 
 	tb = document.getElementById("tablebody");
@@ -22,7 +36,7 @@ function setupOrders() {
 		td.innerHTML = order["id"];
 		tr.appendChild(td);
 		td = document.createElement("td");
-		td.innerHTML = JSON.stringify(order["items"]);
+		td.innerHTML =  order["items"].map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');//JSON.stringify(order["items"];
 		tr.appendChild(td);
 		tb.appendChild(tr);
 	}
@@ -49,7 +63,7 @@ function setupOrders() {
 			td.innerHTML = orderArray[i]["_id"];
 			tr.appendChild(td);
 			td = document.createElement("td");
-			td.innerHTML = JSON.stringify(orderArray[i]["items"]);
+			td.innerHTML =  orderArray[i].items.map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');//JSON.stringify(order["items"];
 			tr.appendChild(td);
 			tb.appendChild(tr);
 		}

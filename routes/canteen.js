@@ -39,5 +39,10 @@ module.exports = function(db, wss) {
     res.sendFile('html/canteen_menu.html', {root: path.join(__dirname, '../static/')});
   });
 
+  // master menu updation page
+  router.get('/master_menu', function(req, res) {
+    res.sendFile('html/canteen_master_menu.html', {root: path.join(__dirname, '../static/')});
+  });
+
   return router;
 };
