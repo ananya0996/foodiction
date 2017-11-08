@@ -27,6 +27,7 @@ function fetchMasterMenuItems() {
 			var imgcol = document.createElement("td");
 			var namecol = document.createElement("td");
 			var ratecol = document.createElement("td");
+			var checkcol = document.createElement("td");
 			var rmcol = document.createElement("td");
 
 			var img = document.createElement("img");
@@ -40,6 +41,22 @@ function fetchMasterMenuItems() {
 			ratecol.id = "rate" + curr_item._id;
 			ratecol.innerHTML = curr_item.rate;
 
+			if(curr_item.indailymenu == true){
+				var chec = document.createElement("button");
+				chec.id = curr_item._id;
+				chec.innerText = "Remove";
+				chec.className = "rmbutton";
+				chec.onclick = ToggleDailyMenu;
+				checkcol.appendChild(chec);	
+			}
+			else{
+				var chec = document.createElement("button");
+				chec.id = curr_item._id;
+				chec.innerText = "Add";
+				chec.className = "addbutton";
+				chec.onclick = ToggleDailyMenu;
+				checkcol.appendChild(chec);		
+			}
 
 			var rm = document.createElement("button");
 			rm.id = curr_item._id;
@@ -51,6 +68,7 @@ function fetchMasterMenuItems() {
 			newRow.appendChild(imgcol);
 			newRow.appendChild(namecol);
 			newRow.appendChild(ratecol);
+			newRow.appendChild(checkcol);
 			newRow.appendChild(rmcol);
 
 			tbody.appendChild(newRow);
@@ -67,6 +85,7 @@ function CreateMasterMenuItem() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
+				console.log(response.success);
 				updateTable(nameInp, rateInp, response.success);
 			}
 		}
@@ -78,7 +97,8 @@ function CreateMasterMenuItem() {
 		rate: rateInp
 	}));
 
-	function updateTable(nameInp, rateInp, idno) {
+	function updateTable(nameInp, rateInp, {_id: idno}) {
+		console.log(idno)
 		var tbody = document.getElementById("tbody");
 
 		var newRow = document.createElement("tr");
@@ -86,23 +106,25 @@ function CreateMasterMenuItem() {
 		var imgcol = document.createElement("td");
 		var namecol = document.createElement("td");
 		var ratecol = document.createElement("td");
+		var checkcol = document.createElement("td");
 		var rmcol = document.createElement("td");
-		console.log("Here1");
-
 		var img = document.createElement("img");
 		img.src = "/images/food.png";
 		img.className = "img-rounded food-img imsize";
 		imgcol.appendChild(img);
 
-		console.log("Here2");
-		console.log(nameInp);
-		console.log(rateInp);
 		namecol.innerHTML = nameInp;
 		namecol.id = "name" + idno;
 
 		ratecol.id = "rate" + idno;
 		ratecol.innerHTML = rateInp;
 
+		var chec = document.createElement("button");
+		chec.id = idno;
+		chec.innerText = "Add";
+		chec.className = "addbutton";
+		chec.onclick = ToggleDailyMenu;
+		checkcol.appendChild(chec);
 
 		var rm = document.createElement("button");
 		rm.id = idno;
@@ -114,10 +136,10 @@ function CreateMasterMenuItem() {
 		newRow.appendChild(imgcol);
 		newRow.appendChild(namecol);
 		newRow.appendChild(ratecol);
+		newRow.appendChild(checkcol);
 		newRow.appendChild(rmcol);
 
 		tbody.appendChild(newRow);
-		idno = idno + 1;
 	}
 }
 
@@ -136,5 +158,42 @@ function RemoveMasterMenuItem() {
 	
 	xhr.open('delete', '/api/item/master_menu_item/' + itemId);
 	xhr.send(null);
+
+}
+
+function ToggleDailyMenu() {
+
+	var item = event.target;
+	var itemId = item.id;
+	if(item.className == "addbutton"){
+		const xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState === 4 && xhr.status === 200) {
+				const response = JSON.parse(xhr.responseText);
+				if(response.success) {
+					item.innerText = "Remove";
+					item.className = "rmbutton";
+				}
+			}
+		}
+		xhr.open('post', '/api/item/');
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.send(JSON.stringify({id: itemId}));	
+	}
+	else if(item.className == "rmbutton"){
+		const xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState === 4 && xhr.status === 200) {
+				const response = JSON.parse(xhr.responseText);
+				if(response.success) {
+					item.innerText = "Add";
+					item.className = "addbutton";
+				}
+			}
+		}
+		xhr.open('delete', '/api/item/' + itemId);
+		xhr.send();	
+	}
+
 
 }

@@ -35,10 +35,20 @@ module.exports = function(db) {
         res.json({'error': 'Unable to insert item'});
       }
 
-	  console.log(result);
-      res.json({'success': result.upsertedID});
+      res.json({'success': result.modifiedCount});
     });
   });
+
+
+  router.delete('/:id', function(req, res) {
+    itemsCollection.updateOne({_id: ObjectID(req.params.id)}, {$set: {indailymenu: false}}, function(err, item) {
+      if(err) {
+        res.json({'error': `Unable to delete item ${req.params.id}`});
+      }
+      res.json({'success': `Removed item ${req.params.id}`});
+    });
+  });
+
 
   // create new master menu item
   router.post('/master_menu_item', function(req, res) {
@@ -47,8 +57,7 @@ module.exports = function(db) {
         res.json({'error': 'Unable to insert item'});
       }
 	  
-	  console.log(result);
-	  res.json({'success': result.upsertedID});
+	  res.json({'success': result.upsertedId});
 	  
     });
   });
@@ -69,16 +78,6 @@ module.exports = function(db) {
 
   });
 
-  // delete particular item
-  router.delete('/:id', function(req, res) {
-    itemsCollection.updateOne({_id: ObjectID(req.params.id)}, {$set: {indailymenu : false}}, function(err, item) {
-      if(err) {
-        res.json({'error': `Unable to delete item ${req.params.id}`});
-      }
-
-      res.json({'success': `Removed item ${req.params.id}`});
-    });
-  });
 
   // delete particular master menu item
   router.delete('/master_menu_item/:id', function(req, res) {  
