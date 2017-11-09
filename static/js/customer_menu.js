@@ -151,7 +151,7 @@ function checkout()
 	xhr.open("post", "/api/order", true); // INTEGRATE
 	xhr.onreadystatechange = checkOrderStatus;
 	xhr.setRequestHeader("Content-Type", "application/json");
-	alert(JSON.stringify(cartItems));
+	//alert(JSON.stringify(cartItems));
 	xhr.send(JSON.stringify({items: cartItems}));
 }
 
@@ -167,7 +167,11 @@ function checkOrderStatus()
 		else
 		{
 			//location.replace("orderplaced.html?orderNumber=" + orderNumber);
-			alert("Your order has been placed! ID: " + response.success);
+			//alert("Your order has been placed! ID: " + response.success);
+			localStorage.setItem("orderID", response.success);
+			window.location.assign("/customer/order_placed");
+
+			//clean localStorage here?
 		}
 	}
 }
