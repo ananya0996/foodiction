@@ -10,5 +10,9 @@ module.exports = function(db, wss) {
     res.sendFile('html/customer_menu.html', {root: path.join(__dirname, '../static/')});
   });
 
+  router.get('/order_placed', function(req, res) {
+    res.sendFile('html/order_placed.html', {root: path.join(__dirname, '../static/')});
+  });
+
   return router;
 }
