@@ -10,7 +10,7 @@ module.exports = function(db) {
 
   // get all items
   router.get('/', function(req, res) {
-    itemsCollection.find({}).toArray(function(err, items) {
+    itemsCollection.find({indailymenu : true}).toArray(function(err, items) {
       if(err) {
         res.json({'error': 'Unable to fetch items'});
       }
@@ -18,14 +18,47 @@ module.exports = function(db) {
     });
   });
 
+  // get master menu items
+  router.get('/master_menu_items', function(req, res) {
+    itemsCollection.find({}).toArray(function(err, items) {
+      if(err) {
+        res.json({'error': 'Unable to fetch items'});
+      }
+      res.json({'success': items});
+    });
+  });
+//   itemsCollection.update({name: req.body.name, rate: req.body.rate, date: req.body.date}, { $set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, function(err, result)
   // create new item
   router.post('/', function(req, res) {
-    itemsCollection.insert({name: req.body.name, rate: req.body.rate}, function(err, result) {
+    itemsCollection.updateOne({_id: ObjectID(req.body.id)}, {$set: {indailymenu : true}}, {"upsert" : true}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert item'});
       }
 
-      res.json({'success': result.insertedIds[0]});
+      res.json({'success': result.modifiedCount});
+    });
+  });
+
+
+  router.delete('/:id', function(req, res) {
+    itemsCollection.updateOne({_id: ObjectID(req.params.id)}, {$set: {indailymenu: false}}, function(err, item) {
+      if(err) {
+        res.json({'error': `Unable to delete item ${req.params.id}`});
+      }
+      res.json({'success': `Removed item ${req.params.id}`});
+    });
+  });
+
+
+  // create new master menu item
+  router.post('/master_menu_item', function(req, res) {
+    itemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate, indailymenu : false}}, {"upsert" : true}, function(err, result) {
+      if(err) {
+        res.json({'error': 'Unable to insert item'});
+      }
+	  
+	  res.json({'success': result.upsertedId});
+	  
     });
   });
 
@@ -45,8 +78,9 @@ module.exports = function(db) {
 
   });
 
-  // delete particular item
-  router.delete('/:id', function(req, res) {
+
+  // delete particular master menu item
+  router.delete('/master_menu_item/:id', function(req, res) {  
     itemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
       if(err) {
         res.json({'error': `Unable to delete item ${req.params.id}`});
