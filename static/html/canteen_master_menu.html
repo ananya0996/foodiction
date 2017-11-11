@@ -4,7 +4,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/canteen_menu.css">
-		<script type="text/javascript" src = "/js/canteen_master_menu.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		</head>
@@ -28,14 +27,21 @@
 
 				</tbody>
 			</table>
-			<form class = "welcome">
+			<div class = "welcome">
 				Enter the Item Name: <input type = "text" class = "form-control" id = "Item" name = "Item" value = ""/>
 				<br/>
 				Enter the Price: <input type = "text" class = "form-control" id = "Price" name = "Price" value = ""/>
 				<br/>
+				<div>
+					<h2>Ingredients</h2>
+					<button id="add-ingredient">+</button>
+					<div id="current-ingredients">
+					</div>
+				</div>
 				<input type = "button" class = "btn-lg" id = "addItem" name = "addItem" value = "Add Item" onclick = "CreateMasterMenuItem()"/>
-			</form>
+			</div>
 
 		</center>
+		<script type="text/javascript" src = "/js/canteen_master_menu.js"></script>
 	</body>
 </html>

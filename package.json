@@ -1,7 +1,7 @@
 {
   "name": "foodiction",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Canteen Automation System",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,5 +15,14 @@
     "express-session": "^1.15.6",
     "mongodb": "^2.2.31",
     "ws": "^3.2.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ananya0996/foodiction.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ananya0996/foodiction/issues"
+  },
+  "homepage": "https://github.com/ananya0996/foodiction#readme"
 }

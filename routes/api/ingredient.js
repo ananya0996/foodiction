@@ -20,12 +20,12 @@ module.exports = function(db) {
 
   // create new ingredient
   router.post('/', function(req, res) {
-    ingredientsCollection.insert({name: req.body.name}, function(err, ingredient) {
+    ingredientsCollection.insert({name: req.body.name, quantity: req.body.qnty}, function(err, result) {
       if(err) {
         res.json({'error': 'Unable to insert ingredient'});
       }
 
-      res.json({'success': 'Successfully inserted ingredient'});
+      res.json({'success': result.insertedIds[0]});
     });
   });
 

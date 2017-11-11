@@ -1,9 +1,7 @@
 var cartItems = 0;
 var idno = 4;
 
-let ingredients = null;
-
-function fetchMasterMenuItems() {
+function fetchInventory() {
 	var itemsList;
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -15,7 +13,7 @@ function fetchMasterMenuItems() {
 			}
 		}
 	}
-	xhr.open('get', '/api/item/master_menu_items');
+	xhr.open('get', '/api/ingredient/');
 	xhr.send(null);
 
 	function dispItems()
@@ -27,9 +25,9 @@ function fetchMasterMenuItems() {
 			var newRow = document.createElement("tr");
 			newRow.id = 'row' + curr_item._id;
 			var imgcol = document.createElement("td");
+			var idcol = document.createElement("td");
 			var namecol = document.createElement("td");
-			var ratecol = document.createElement("td");
-			var checkcol = document.createElement("td");
+			var qntycol = document.createElement("td");
 			var rmcol = document.createElement("td");
 
 			var img = document.createElement("img");
@@ -40,15 +38,15 @@ function fetchMasterMenuItems() {
 			namecol.innerHTML = curr_item.name;
 			namecol.id = "name" + curr_item._id;
 
-			ratecol.id = "rate" + curr_item._id;
-			ratecol.innerHTML = curr_item.rate;
+			idcol.id = curr_item._id;
+			idcol.innerHTML = curr_item._id;
 
-			if(curr_item.indailymenu == true){
+			/*if(curr_item.indailymenu == true){
 				var chec = document.createElement("button");
 				chec.id = curr_item._id;
 				chec.innerText = "Remove";
 				chec.className = "rmbutton";
-				chec.onclick = ToggleDailyMenu;
+				//chec.onclick = ToggleDailyMenu;
 				checkcol.appendChild(chec);	
 			}
 			else{
@@ -56,9 +54,9 @@ function fetchMasterMenuItems() {
 				chec.id = curr_item._id;
 				chec.innerText = "Add";
 				chec.className = "addbutton";
-				chec.onclick = ToggleDailyMenu;
+				//chec.onclick = ToggleDailyMenu;
 				checkcol.appendChild(chec);		
-			}
+			}*/
 
 			var rm = document.createElement("button");
 			rm.id = curr_item._id;
@@ -68,9 +66,9 @@ function fetchMasterMenuItems() {
 			rmcol.appendChild(rm);
 
 			newRow.appendChild(imgcol);
+			newRow.appendChild(idcol);
 			newRow.appendChild(namecol);
-			newRow.appendChild(ratecol);
-			newRow.appendChild(checkcol);
+			newRow.appendChild(qntycol);
 			newRow.appendChild(rmcol);
 
 			tbody.appendChild(newRow);
@@ -78,28 +76,28 @@ function fetchMasterMenuItems() {
 	}
 }
 
-function CreateMasterMenuItem() {
+function CreateItem() {
 	var nameInp = document.getElementById("Item").value;
-	var rateInp = document.getElementById("Price").value;
+	var qntyInp = document.getElementById("Quantity").value;
 
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
-				console.log(response.success);
-				updateTable(nameInp, rateInp, response.success);
+				console.log('response ' + response.success);
+				updateTable(nameInp, qntyInp, response.success);
 			}
 		}
 	}
-	xhr.open('post', '/api/item/master_menu_item');
+	xhr.open('post', '/api/ingredient/');
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		name: nameInp,
-		rate: rateInp
+		qnty: qntyInp
 	}));
 
-	function updateTable(nameInp, rateInp, {_id: idno}) {
+	function updateTable(nameInp, qntyInp, idno) {
 		console.log(idno)
 		var tbody = document.getElementById("tbody");
 
@@ -107,8 +105,8 @@ function CreateMasterMenuItem() {
 		newRow.id = 'row' + idno;
 		var imgcol = document.createElement("td");
 		var namecol = document.createElement("td");
-		var ratecol = document.createElement("td");
-		var checkcol = document.createElement("td");
+		var idcol = document.createElement("td");
+		var qntycol = document.createElement("td");
 		var rmcol = document.createElement("td");
 		var img = document.createElement("img");
 		img.src = "/images/food.png";
@@ -118,15 +116,11 @@ function CreateMasterMenuItem() {
 		namecol.innerHTML = nameInp;
 		namecol.id = "name" + idno;
 
-		ratecol.id = "rate" + idno;
-		ratecol.innerHTML = rateInp;
+		idcol.id = idno;
+		idcol.innerHTML = idno;
 
-		var chec = document.createElement("button");
-		chec.id = idno;
-		chec.innerText = "Add";
-		chec.className = "addbutton";
-		chec.onclick = ToggleDailyMenu;
-		checkcol.appendChild(chec);
+		qntycol.id = "qnty" + idno;
+		qntycol.innerHTML = qntyInp;
 
 		var rm = document.createElement("button");
 		rm.id = idno;
@@ -136,9 +130,9 @@ function CreateMasterMenuItem() {
 		rmcol.appendChild(rm);
 
 		newRow.appendChild(imgcol);
+		newRow.appendChild(idcol);
 		newRow.appendChild(namecol);
-		newRow.appendChild(ratecol);
-		newRow.appendChild(checkcol);
+		newRow.appendChild(qntycol);
 		newRow.appendChild(rmcol);
 
 		tbody.appendChild(newRow);
@@ -158,12 +152,12 @@ function RemoveMasterMenuItem() {
 		}
 	}
 	
-	xhr.open('delete', '/api/item/master_menu_item/' + itemId);
+	xhr.open('delete', '/api/ingredient/' + itemId);
 	xhr.send(null);
 
 }
 
-function ToggleDailyMenu() {
+/*function ToggleDailyMenu() {
 
 	var item = event.target;
 	var itemId = item.id;
@@ -198,65 +192,4 @@ function ToggleDailyMenu() {
 	}
 
 
-}
-
-
-
-document.querySelector('#add-ingredient').addEventListener('click', addIngredient);
-function addIngredient(evt) {
-	evt.preventDefault();
-	console.log('here');
-	if(ingredients == null) {
-		const xhr = new XMLHttpRequest();
-		xhr.open('get', '/api/ingredient/');
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4 && xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
-				if(response.success) {
-					ingredients = response.success;
-					addIngredient(evt);
-				}
-			}
-		}
-		xhr.send();
-	} else {
-		createIngredientForm();
-	}
-
-
-	function createIngredientForm() {
-		evt.target.setAttribute('disabled', true);
-		const currentIngredients = document.querySelector('#current-ingredients');
-		const newIngredient = document.createElement('div');
-		newIngredient.classList.add('new-ingredient');
-		const ingredientSelect = document.createElement('select');
-		const currentIngredientSet = new Set(Array.from(document.querySelectorAll('.new-ingredient > select')).map(el => el.value));
-		const available = ingredients.filter(ingredient => !currentIngredientSet.has(ingredient._id));
-		if(!available.length) return;
-
-		available.forEach((ingredient) => {
-			const optionEl = document.createElement('option');
-			optionEl.innerText = ingredient.name;
-			optionEl.setAttribute('value', ingredient._id);
-			ingredientSelect.appendChild(optionEl);
-		});
-
-		newIngredient.appendChild(ingredientSelect);
-
-		const quantityInput = document.createElement('input');
-		quantityInput.setAttribute('type', 'number');
-		quantityInput.setAttribute('value', '0');
-		newIngredient.appendChild(quantityInput);
-
-		currentIngredients.appendChild(newIngredient);
-
-		const freezeButton = document.createElement('button');
-		freezeButton.innerText = 'Freeze';
-		freezeButton.onclick = function() {
-			ingredientSelect.setAttribute('disabled', true);
-			evt.target.removeAttribute('disabled');
-			freezeButton.setAttribute('disabled', true);
-		}
-		currentIngredients.appendChild(freezeButton);
-	}
-}
+}*/
