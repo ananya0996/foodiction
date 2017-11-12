@@ -44,5 +44,9 @@ module.exports = function(db, wss) {
     res.sendFile('html/canteen_master_menu.html', {root: path.join(__dirname, '../static/')});
   });
 
+  router.get('/ready_orders', function(req, res) {
+    res.sendFile('html/ready_orders.html', {root: path.join(__dirname, '../static/')});
+  });
+
   return router;
 };
