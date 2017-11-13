@@ -47,17 +47,22 @@ module.exports = function(db, wss) {
 		} else if(parseInt(req.body.status, 10) === 2) {
 			update = {$set: {status : 2, archivedTime: Date.now()}};
 		}
-		ordersCollection.updateOne({_id: ObjectID(req.params.id)}, update, function(err, order) {
+		ordersCollection.updateOne({_id: ObjectID(req.params.id)}, update, function(err, updateResult) {
 			if(err) {
 				res.json({'error': `Unable to change status of order ${req.params.id} to ${req.body.status}`});
 			}
+			ordersCollection.find({_id: ObjectID(req.params.id)}).toArray(function(err, findResult) {
+				if(err) {
+					res.json({'error': `Unable to change status of order ${req.params.id} to ${req.body.status}`});
+				}
 
-			if(parseInt(req.body.status) === 0) {
-				wss.broadcast(JSON.stringify({'placedOrder': {id: req.params.id, items: req.body.items}}));
-			} else if(parseInt(req.body.status) === 1) {
-				wss.broadcast(JSON.stringify({'servicedOrder': req.params.id}));
-			}
-			res.json({'success': `Order ${req.params.id} to Status ${req.body.status}`});
+				if(parseInt(req.body.status) === 0) {
+					wss.broadcast(JSON.stringify({'placedOrder': {id: req.params.id, items: findResult[0].items}}));
+				} else if(parseInt(req.body.status) === 1) {
+					wss.broadcast(JSON.stringify({'servicedOrder': req.params.id}));
+				}
+				res.json({'success': `Order ${req.params.id} to Status ${req.body.status}`});
+			});
 		});
 	});
 
