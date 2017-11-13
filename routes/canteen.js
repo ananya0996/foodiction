@@ -1,52 +1,38 @@
-const Router = require('express').Router;
 const path = require('path');
-module.exports = function(db, wss) {
-  const router = Router();
+const routerFactory = require('express').Router;
 
-  // Canteen Routes
+module.exports = function () {
+	const router = routerFactory();
 
-  // login page
-  router.get('/login', function(req, res) {
+	// Canteen Routes
 
-  });
+	router.get('/home', (req, res) => {
+		res.sendFile('html/canteen_staff.html', {root: path.join(__dirname, '../static/')});
+	});
 
-  // login action
-  router.post('/login', function(req, res) {
+	// Live orders page
+	router.get('/orders', (req, res) => {
+		res.sendFile('html/canteen_orders.html', {root: path.join(__dirname, '../static/')});
+	});
 
-  });
+	// Inventory management page
+	router.get('/inventory', (req, res) => {
+		res.sendFile('html/check_inventory.html', {root: path.join(__dirname, '../static/')});
+	});
 
-  // logout action
-  router.post('/logout', function(req, res) {
+	// Menu updation page
+	router.get('/menu', (req, res) => {
+		res.sendFile('html/canteen_menu.html', {root: path.join(__dirname, '../static/')});
+	});
 
-  });
+	// Master menu updation page
+	router.get('/master_menu', (req, res) => {
+		res.sendFile('html/canteen_master_menu.html', {root: path.join(__dirname, '../static/')});
+	});
 
-  router.get('/home', function(req, res) {
-    res.sendFile('html/canteen_staff.html', {root: path.join(__dirname, '../static/')});
-  });
+	router.get('/ready_orders', (req, res) => {
+		res.sendFile('html/ready_orders.html', {root: path.join(__dirname, '../static/')});
+	});
 
-  // live orders page
-  router.get('/orders', function(req, res) {
-    res.sendFile('html/canteen_orders.html', {root: path.join(__dirname, '../static/')});
-  });
-
-  // inventory management page
-  router.get('/inventory', function(req, res) {
-    res.sendFile('html/check_inventory.html', {root: path.join(__dirname, '../static/')});
-  });
-
-  // menu updation page
-  router.get('/menu', function(req, res) {
-    res.sendFile('html/canteen_menu.html', {root: path.join(__dirname, '../static/')});
-  });
-
-  // master menu updation page
-  router.get('/master_menu', function(req, res) {
-    res.sendFile('html/canteen_master_menu.html', {root: path.join(__dirname, '../static/')});
-  });
-
-  router.get('/ready_orders', function(req, res) {
-    res.sendFile('html/ready_orders.html', {root: path.join(__dirname, '../static/')});
-  });
-
-  return router;
+	return router;
 };

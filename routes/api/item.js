@@ -1,94 +1,83 @@
-const Router = require('express').Router;
-const ObjectID = require('mongodb').ObjectID;
+const routerFactory = require('express').Router;
+const objectID = require('mongodb').ObjectID;
 
-module.exports = function(db) {
-  const router = Router();
+module.exports = function (db) {
+	const router = routerFactory();
 
-  // Item API Routes
+	// Item API Routes
 
-  const itemsCollection = db.collection('items');
+	const itemsCollection = db.collection('items');
 
-  // get all items
-  router.get('/', function(req, res) {
-    itemsCollection.find({indailymenu : true}).toArray(function(err, items) {
-      if(err) {
-        res.json({'error': 'Unable to fetch items'});
-      }
-      res.json({'success': items});
-    });
-  });
+	// Get all items
+	router.get('/', (req, res) => {
+		itemsCollection.find({indailymenu: true}).toArray((err, items) => {
+			if (err) {
+				res.json({error: 'Unable to fetch items'});
+			}
+			res.json({success: items});
+		});
+	});
 
-  // get master menu items
-  router.get('/master_menu_items', function(req, res) {
-    itemsCollection.find({}).toArray(function(err, items) {
-      if(err) {
-        res.json({'error': 'Unable to fetch items'});
-      }
-      res.json({'success': items});
-    });
-  });
-//   itemsCollection.update({name: req.body.name, rate: req.body.rate, date: req.body.date}, { $set: {name: req.body.name, rate: req.body.rate, date: req.body.date}}, function(err, result)
-  // create new item
-  router.post('/', function(req, res) {
-    itemsCollection.updateOne({_id: ObjectID(req.body.id)}, {$set: {indailymenu : true}}, {"upsert" : true}, function(err, result) {
-      if(err) {
-        res.json({'error': 'Unable to insert item'});
-      }
+	// Get master menu items
+	router.get('/master_menu_items', (req, res) => {
+		itemsCollection.find({}).toArray((err, items) => {
+			if (err) {
+				res.json({error: 'Unable to fetch items'});
+			}
+			res.json({success: items});
+		});
+	});
 
-      res.json({'success': result.modifiedCount});
-    });
-  });
+	// Create new item
+	router.post('/', (req, res) => {
+		itemsCollection.updateOne({_id: objectID(req.body.id)}, {$set: {indailymenu: true}}, {upsert: true}, (err, result) => {
+			if (err) {
+				res.json({error: 'Unable to insert item'});
+			}
 
+			res.json({success: result.modifiedCount});
+		});
+	});
 
-  router.delete('/:id', function(req, res) {
-    itemsCollection.updateOne({_id: ObjectID(req.params.id)}, {$set: {indailymenu: false}}, function(err, item) {
-      if(err) {
-        res.json({'error': `Unable to delete item ${req.params.id}`});
-      }
-      res.json({'success': `Removed item ${req.params.id}`});
-    });
-  });
+	router.delete('/:id', (req, res) => {
+		itemsCollection.updateOne({_id: objectID(req.params.id)}, {$set: {indailymenu: false}}, err => {
+			if (err) {
+				res.json({error: `Unable to delete item ${req.params.id}`});
+			}
+			res.json({success: `Removed item ${req.params.id}`});
+		});
+	});
 
+	// Create new master menu item
+	router.post('/master_menu_item', (req, res) => {
+		itemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate, indailymenu: false}}, {upsert: true}, (err, result) => {
+			if (err) {
+				res.json({error: 'Unable to insert item'});
+			}
+			res.json({success: result.upsertedId});
+		});
+	});
 
-  // create new master menu item
-  router.post('/master_menu_item', function(req, res) {
-    itemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate, indailymenu : false}}, {"upsert" : true}, function(err, result) {
-      if(err) {
-        res.json({'error': 'Unable to insert item'});
-      }
-	  
-	  res.json({'success': result.upsertedId});
-	  
-    });
-  });
+	// Read particular item
+	router.get('/:id', (req, res) => {
+		itemsCollection.findOne({_id: objectID(req.params.id)}, (err, item) => {
+			if (err) {
+				res.json({error: `Unable to fetch item ${req.params.id}`});
+			}
 
-  // read particular item
-  router.get('/:id', function(req, res) {
-    itemsCollection.findOne({_id: ObjectID(req.params.id)}, function(err, item) {
-      if(err) {
-        res.json({'error': `Unable to fetch item ${req.params.id}`});
-      }
+			res.json({success: item});
+		});
+	});
 
-      res.json({'success': item});
-    });
-  });
+	// Delete particular master menu item
+	router.delete('/master_menu_item/:id', (req, res) => {
+		itemsCollection.deleteOne({_id: objectID(req.params.id)}, err => {
+			if (err) {
+				res.json({error: `Unable to delete item ${req.params.id}`});
+			}
+			res.json({success: `Removed item ${req.params.id}`});
+		});
+	});
 
-  // update particular item
-  router.put('/:id', function(req, res) {
-
-  });
-
-
-  // delete particular master menu item
-  router.delete('/master_menu_item/:id', function(req, res) {  
-    itemsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, item) {
-      if(err) {
-        res.json({'error': `Unable to delete item ${req.params.id}`});
-      }
-
-      res.json({'success': `Removed item ${req.params.id}`});
-    });
-  });
-
-  return router;
+	return router;
 };

@@ -1,49 +1,49 @@
-const Router = require('express').Router;
-const ObjectID = require('mongodb').ObjectID;
+const routerFactory = require('express').Router;
+const objectID = require('mongodb').ObjectID;
 
-module.exports = function(db) {
-  const router = Router();
+module.exports = function (db) {
+	const router = routerFactory();
 
-  // Ingredient API Routes
+	// Ingredient API Routes
 
-  const ingredientsCollection = db.collection('ingredients');
+	const ingredientsCollection = db.collection('ingredients');
 
-  // get all ingredients
-  router.get('/', function(req, res) {
-    ingredientsCollection.find({}).toArray(function(err, ingredients) {
-      if(err) {
-        res.json({'error': 'Unable to fetch ingredients'});
-      }
-      res.json({'success': ingredients});
-    });
-  });
+	// Get all ingredients
+	router.get('/', (req, res) => {
+		ingredientsCollection.find({}).toArray((err, ingredients) => {
+			if (err) {
+				res.json({error: 'Unable to fetch ingredients'});
+			}
+			res.json({success: ingredients});
+		});
+	});
 
-  // create new ingredient
-  router.post('/', function(req, res) {
-    ingredientsCollection.insert({name: req.body.name, quantity: req.body.qnty}, function(err, result) {
-      if(err) {
-        res.json({'error': 'Unable to insert ingredient'});
-      }
+	// Create new ingredient
+	router.post('/', (req, res) => {
+		ingredientsCollection.insert({name: req.body.name, quantity: req.body.qnty}, (err, result) => {
+			if (err) {
+				res.json({error: 'Unable to insert ingredient'});
+			}
 
-      res.json({'success': result.insertedIds[0]});
-    });
-  });
+			res.json({success: result.insertedIds[0]});
+		});
+	});
 
-  // update a particular ingredient
-  router.put('/:id', function(req, res) {
+	// Update a particular ingredient
+	router.put('/:id', () => {
 
-  });
+	});
 
-  // delete a particular ingredient
-  router.delete('/:id', function(req, res) {
-    ingredientsCollection.deleteOne({_id: ObjectID(req.params.id)}, function(err, ingredient) {
-      if(err) {
-        res.json({'error': `Unable to delete ingredient ${req.params.id}`});
-      }
+	// Delete a particular ingredient
+	router.delete('/:id', (req, res) => {
+		ingredientsCollection.deleteOne({_id: objectID(req.params.id)}, err => {
+			if (err) {
+				res.json({error: `Unable to delete ingredient ${req.params.id}`});
+			}
 
-      res.json({'success': `Removed ingredient ${req.params.id}`});
-    });
-  });
+			res.json({success: `Removed ingredient ${req.params.id}`});
+		});
+	});
 
-  return router;
+	return router;
 };
