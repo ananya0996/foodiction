@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ready Orders</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+		body
+		{
+			text-align: center;
+		}
+	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src = "/js/ready_orders.js"></script>
+</head>
+<body onload="updateServicedOrders()">
+<div class = "container-fluid">
+	<div class = "row">
+		<h1>Your food is ready!</h1>
+	</div>
+	<div class = "row" style = "margin: 25px">
+		<div class = "col-sm-3"></div>
+		<div class = "col-sm-6">
+			<table class = "table table-striped">
+				<tbody style = "font-size: 50px">
+					<tr>
+						<td id = "order1">000</td>
+						<td id = "order2">000</td>
+						<td id = "order3">000</td>
+					</tr>
+					<tr>
+						<td id = "order4">000</td>
+						<td id = "order5">000</td>
+						<td id = "order6">000</td>
+					</tr>
+					<tr>
+						<td id = "order7">000</td>
+						<td id = "order8">000</td>
+						<td id = "order9">000</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class = "col-sm-3"></div>
+	</div>
+</div>
+</body>
+</html>
