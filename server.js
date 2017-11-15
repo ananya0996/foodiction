@@ -4,7 +4,7 @@ const express = require('express');
 const ws = require('ws');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-
+const cron = require('cron');
 const customerRoutes = require('./routes/customer');
 const canteenRoutes = require('./routes/canteen');
 const ingredientApiRoutes = require('./routes/api/ingredient');
@@ -49,7 +49,23 @@ function run(db) {
 		});
 	};
 
-	return server;
+	const inventoryJob = new cron.CronJob({
+		cronTime: ' * * *',
+		onTick: async () => {
+			// TODO
+		},
+		start: false,
+		timeZone: 'Asia/Kolkata'
+	});
+
+	return new Proxy(server, {
+		get(target, propKey) {
+			if (propKey === 'listen') {
+				inventoryJob.start();
+			}
+			return target[propKey];
+		}
+	});
 }
 
 module.exports = run;
