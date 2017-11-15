@@ -3,6 +3,7 @@ var idno = 4;
 
 function fetchInventory() {
 	var itemsList;
+	const ws = new WebSocket('ws://localhost:8888');
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
@@ -10,11 +11,24 @@ function fetchInventory() {
 			if(response.success) {
 				itemsList = response.success;
 				dispItems();
+				ws.addEventListener('message', ({data}) => {
+					data = JSON.parse(data);
+					if(data.inventoryUpdate) {
+						itemsList = data.inventoryUpdate;
+						const isCritical = itemsList.filter(item => item.quantity < 0).length > 0;
+						if(isCritical) {
+							alert('Inventory quantities are insufficient for 1 or more ingredients');
+						}
+						document.getElementById("tbody").innerHTML = '';
+						dispItems();
+					}
+				});
 			}
 		}
 	}
 	xhr.open('get', '/api/ingredient/');
 	xhr.send(null);
+
 
 	function dispItems()
 	{
@@ -153,40 +167,3 @@ function RemoveMasterMenuItem() {
 	xhr.send(null);
 
 }
-
-/*function ToggleDailyMenu() {
-
-	var item = event.target;
-	var itemId = item.id;
-	if(item.className == "addbutton"){
-		const xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4 && xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
-				if(response.success) {
-					item.innerText = "Remove";
-					item.className = "rmbutton";
-				}
-			}
-		}
-		xhr.open('post', '/api/item/');
-		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send(JSON.stringify({id: itemId}));
-	}
-	else if(item.className == "rmbutton"){
-		const xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4 && xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
-				if(response.success) {
-					item.innerText = "Add";
-					item.className = "addbutton";
-				}
-			}
-		}
-		xhr.open('delete', '/api/item/' + itemId);
-		xhr.send();
-	}
-
-
-}*/
