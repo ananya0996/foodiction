@@ -48,7 +48,7 @@ function setupOrders() {
 		td.innerHTML = order["id"];
 		tr.appendChild(td);
 		td = document.createElement("td");
-		td.innerHTML =  order["items"].map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');//JSON.stringify(order["items"];
+		td.innerHTML =  order["items"].map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');
 		tr.appendChild(td);
 		td = document.createElement("td");
 		var serviceButton = document.createElement('button');
@@ -76,7 +76,7 @@ function setupOrders() {
 			td.innerHTML = orderArray[i]["_id"];
 			tr.appendChild(td);
 			td = document.createElement("td");
-			td.innerHTML =  orderArray[i].items.map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');//JSON.stringify(order["items"];
+			td.innerHTML =  orderArray[i].items.map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');
 			tr.appendChild(td);
 			td = document.createElement("td");
 			var serviceButton = document.createElement('button');
