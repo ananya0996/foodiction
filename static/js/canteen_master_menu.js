@@ -258,6 +258,7 @@ function addIngredient(evt) {
 
 		const freezeButton = document.createElement('button');
 		freezeButton.innerText = 'Freeze';
+		freezeButton.className = "addbutton";
 		freezeButton.onclick = (function() {
 			return function() {
 				ingredientSelect.setAttribute('disabled', true);

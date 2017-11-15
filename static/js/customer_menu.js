@@ -52,7 +52,7 @@ function putItems()
 
 			var add = document.createElement("button");
 			add.id = "add" + curr_item._id;
-			add.innerText = "Add >>";
+			add.innerText = "Add +";
 			add.className = "addbutton";
 			add.onclick = addToCart;
 			addcol.appendChild(add);
@@ -75,11 +75,15 @@ function addToCart()
 	var itemid = e.id.slice(3);
 	var qty = document.getElementById("qty" + itemid).value;
 	qty = parseInt(qty);
+	if(qty > 5)
+	{
+		qty = 5;
+	}
 	var rate = document.getElementById("rate" + itemid).innerHTML;
 	rate = parseInt(rate);
 	var amt = rate * qty;
 	var itemname = document.getElementById("name" + itemid).innerHTML;
-	e.innerHTML = "<< Remove";
+	e.innerHTML = "Remove -";
 	e.onclick = removeFromCart;
 
 	var tr = document.createElement("tr");
@@ -114,7 +118,7 @@ function removeFromCart()
 {
 	var e = event.target || event.srcElement;
 	var itemid = e.id.slice(3);
-	e.innerHTML = "Add >>";
+	e.innerHTML = "Add +";
 	e.onclick = addToCart;
 
 	var delrow = document.getElementById("cart" + itemid);

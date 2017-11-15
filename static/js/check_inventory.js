@@ -68,7 +68,7 @@ function fetchInventory() {
 			rmcol.appendChild(rm);
 
 			newRow.appendChild(imgcol);
-			newRow.appendChild(idcol);
+			//newRow.appendChild(idcol);
 			newRow.appendChild(namecol);
 			newRow.appendChild(qntycol);
 			newRow.appendChild(prccol);
@@ -120,7 +120,7 @@ function CreateItem() {
 		namecol.id = "name" + idno;
 
 		idcol.id = idno;
-		idcol.innerHTML = idno;
+		idcol.innerHTML = parseInt("0x" + idno.slice(-3));
 
 		qntycol.id = "qnty" + idno;
 		qntycol.innerHTML = qntyInp;
@@ -136,7 +136,7 @@ function CreateItem() {
 		rmcol.appendChild(rm);
 
 		newRow.appendChild(imgcol);
-		newRow.appendChild(idcol);
+		//newRow.appendChild(idcol);
 		newRow.appendChild(namecol);
 		newRow.appendChild(qntycol);
 		newRow.appendChild(prccol);

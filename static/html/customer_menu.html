@@ -14,10 +14,15 @@
 <body onload = "putItems()">
 <div class = "container-fluid">
 	<div class = "row" id = "nav">
-		<div class="row" style = "height: 50px; color: black; font-size: 14pt">
-			<div class="col-sm-12" style = "text-align: center">Menu</div>
+		<div class="col-sm-12" style = "text-align: center;">Today's Menu</div>
+	</div>
+	<br><br>
+	<div class = "row">
+		<div class = "col-sm-12">
+			<h5 style = "color: grey">Note: To place bulk orders (item quantities > 5), please contact the canteen staff.</h5>
 		</div>
 	</div>
+	<br>
 	<div class = "row">
 		<div class = "col-sm-9">
 			<table class = "table table-striped">
@@ -53,7 +58,7 @@
 					</tr>
 				</tfoot>
 			</table>
-			<button id = "checkout" class = "addbutton" onclick = "checkout()">Proceed to Checkout</button>
+			<button id = "checkout" style = "font-size: 20px" class = "addbutton" onclick = "checkout()">Proceed to Checkout</button>
 		</div>
 	</div>
 </div>
