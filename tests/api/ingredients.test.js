@@ -36,7 +36,8 @@ describe('Testing /api/ingredient', () => {
 	test('POST / adds an ingredient', done => {
 		frisby.post(`http://localhost:${APP_PORT}/api/ingredient`, {
 			name: 'Sale',
-			quantity: 500
+			quantity: 1,
+			price: 20
 		}).expect('status', 200)
 		.then(res => {
 			expect(res.json.success).toBeDefined();
@@ -52,7 +53,7 @@ describe('Testing /api/ingredient', () => {
 			.then(res => {
 				expect(res.json.success).toBeDefined();
 				expect(res.json.success).toHaveLength(1);
-				expect(res.json.success[0]).toEqual({_id: ingredientId, name: 'Sale', quantity: 500});
+				expect(res.json.success[0]).toEqual({_id: ingredientId, name: 'Sale', quantity: 0, price: 20});
 			})
 			.done(done);
 	});

@@ -9,7 +9,6 @@ function fetchInventory() {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
 				itemsList = response.success;
-				console.log(itemsList);
 				dispItems();
 			}
 		}
@@ -43,22 +42,9 @@ function fetchInventory() {
 			idcol.id = curr_item._id;
 			idcol.innerHTML = curr_item._id;
 
-			/*if(curr_item.indailymenu == true){
-				var chec = document.createElement("button");
-				chec.id = curr_item._id;
-				chec.innerText = "Remove";
-				chec.className = "rmbutton";
-				//chec.onclick = ToggleDailyMenu;
-				checkcol.appendChild(chec);	
-			}
-			else{
-				var chec = document.createElement("button");
-				chec.id = curr_item._id;
-				chec.innerText = "Add";
-				chec.className = "addbutton";
-				//chec.onclick = ToggleDailyMenu;
-				checkcol.appendChild(chec);		
-			}*/
+			qntycol.innerHTML = curr_item.quantity;
+
+			prccol.innerHTML = curr_item.price;
 
 			var rm = document.createElement("button");
 			rm.id = curr_item._id;
@@ -83,13 +69,12 @@ function CreateItem() {
 	var nameInp = document.getElementById("Item").value;
 	var qntyInp = document.getElementById("Quantity").value;
 	var prcInp = document.getElementById("Price").value;
-	
+
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
-				console.log('response ' + response.success);
 				updateTable(nameInp, qntyInp, prcInp, response.success);
 			}
 		}
@@ -98,12 +83,10 @@ function CreateItem() {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		name: nameInp,
-		qnty: qntyInp,
-		prc: prcInp,
+		price: parseFloat(prcInp) / parseFloat(qntyInp),
 	}));
 
 	function updateTable(nameInp, qntyInp, prcInp, idno) {
-		console.log(idno)
 		var tbody = document.getElementById("tbody");
 
 		var newRow = document.createElement("tr");
@@ -127,7 +110,7 @@ function CreateItem() {
 
 		qntycol.id = "qnty" + idno;
 		qntycol.innerHTML = qntyInp;
-		
+
 		prccol.id = "prc" + idno;
 		prccol.innerHTML = prcInp / qntyInp;
 
@@ -154,7 +137,7 @@ function CreateItem() {
 }
 
 function RemoveMasterMenuItem() {
-	
+
 	var itemId = event.target.id;
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -165,7 +148,7 @@ function RemoveMasterMenuItem() {
 			}
 		}
 	}
-	
+
 	xhr.open('delete', '/api/ingredient/' + itemId);
 	xhr.send(null);
 
@@ -188,7 +171,7 @@ function RemoveMasterMenuItem() {
 		}
 		xhr.open('post', '/api/item/');
 		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send(JSON.stringify({id: itemId}));	
+		xhr.send(JSON.stringify({id: itemId}));
 	}
 	else if(item.className == "rmbutton"){
 		const xhr = new XMLHttpRequest();
@@ -202,7 +185,7 @@ function RemoveMasterMenuItem() {
 			}
 		}
 		xhr.open('delete', '/api/item/' + itemId);
-		xhr.send();	
+		xhr.send();
 	}
 
 

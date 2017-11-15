@@ -1,6 +1,6 @@
 var cartItems = 0;
 var idno = 4;
-var ingredientJSON = {};
+var ingredientJSON = [];
 
 let ingredients = null;
 
@@ -50,7 +50,7 @@ function fetchMasterMenuItems() {
 				chec.innerText = "Remove";
 				chec.className = "rmbutton";
 				chec.onclick = ToggleDailyMenu;
-				checkcol.appendChild(chec);	
+				checkcol.appendChild(chec);
 			}
 			else{
 				var chec = document.createElement("button");
@@ -58,7 +58,7 @@ function fetchMasterMenuItems() {
 				chec.innerText = "Add";
 				chec.className = "addbutton";
 				chec.onclick = ToggleDailyMenu;
-				checkcol.appendChild(chec);		
+				checkcol.appendChild(chec);
 			}
 
 			var rm = document.createElement("button");
@@ -81,7 +81,7 @@ function fetchMasterMenuItems() {
 
 function CreateMasterMenuItem() {
 
-	
+	document.querySelector('#current-ingredients').innerHTML = '';
 
 	var nameInp = document.getElementById("Item").value;
 	var rateInp = document.getElementById("Price").value;
@@ -91,7 +91,6 @@ function CreateMasterMenuItem() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
-				console.log(response.success);
 				updateTable(nameInp, rateInp, response.success);
 			}
 		}
@@ -100,11 +99,11 @@ function CreateMasterMenuItem() {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		name: nameInp,
-		rate: rateInp
+		rate: rateInp,
+		ingredients: ingredientJSON
 	}));
 
 	function updateTable(nameInp, rateInp, {_id: idno}) {
-		console.log(idno)
 		var tbody = document.getElementById("tbody");
 
 		var newRow = document.createElement("tr");
@@ -149,26 +148,12 @@ function CreateMasterMenuItem() {
 	}
 	document.getElementById("Item").value='';
 	document.getElementById("Price").value='';
-	const xhr1 = new XMLHttpRequest();
-	xhr1.onreadystatechange = function() {
-		if(xhr1.readyState === 4 && xhr1.status === 200) {
-			const response = JSON.parse(xhr1.responseText);
-			if(response.success) {
-				console.log(response.success);
-				//updateTable(nameInp, rateInp, response.success);
-			}
-		}
-	}
-	xhr1.open('post', '/api/ingredient');
-	xhr1.setRequestHeader('Content-Type', 'application/json');
-	xhr1.send(JSON.stringify(ingredientJSON));
 	//document.getElementById("Item").value='';
 	//document.getElementById("Price").value='';
-	document.location.reload();
 }
 
 function RemoveMasterMenuItem() {
-	
+
 	var itemId = event.target.id;
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -179,7 +164,7 @@ function RemoveMasterMenuItem() {
 			}
 		}
 	}
-	
+
 	xhr.open('delete', '/api/item/master_menu_item/' + itemId);
 	xhr.send(null);
 
@@ -202,7 +187,7 @@ function ToggleDailyMenu() {
 		}
 		xhr.open('post', '/api/item/');
 		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send(JSON.stringify({id: itemId}));	
+		xhr.send(JSON.stringify({id: itemId}));
 	}
 	else if(item.className == "rmbutton"){
 		const xhr = new XMLHttpRequest();
@@ -216,7 +201,7 @@ function ToggleDailyMenu() {
 			}
 		}
 		xhr.open('delete', '/api/item/' + itemId);
-		xhr.send();	
+		xhr.send();
 	}
 
 
@@ -226,8 +211,6 @@ function ToggleDailyMenu() {
 
 document.querySelector('#add-ingredient').addEventListener('click', addIngredient);
 function addIngredient(evt) {
-	//evt.preventDefault();
-	console.log('here');
 	if(ingredients == null) {
 		const xhr = new XMLHttpRequest();
 		xhr.open('get', '/api/ingredient/');
@@ -236,7 +219,6 @@ function addIngredient(evt) {
 				const response = JSON.parse(xhr.responseText);
 				if(response.success) {
 					ingredients = response.success;
-					//console.log(ingredients);
 					addIngredient(evt);
 				}
 			}
@@ -249,17 +231,14 @@ function addIngredient(evt) {
 
 	function createIngredientForm() {
 		evt.target.setAttribute('disabled', true);
-		//console.log('here1');
 		const currentIngredients = document.querySelector('#current-ingredients');
 		const newIngredient = document.createElement('div');
 		newIngredient.classList.add('new-ingredient');
-		var optionEl; 
+		var optionEl;
 		const ingredientSelect = document.createElement('select');
 		const currentIngredientSet = new Set(Array.from(document.querySelectorAll('.new-ingredient > select')).map(el => el.value));
 		const available = ingredients.filter(ingredient => !currentIngredientSet.has(ingredient._id));
-		console.log(available.length);
 		if(!available.length) return;
-		console.log('here1');
 		available.forEach((ingredient) => {
 			optionEl = document.createElement('option');
 			optionEl.innerText = ingredient.name;
@@ -278,14 +257,16 @@ function addIngredient(evt) {
 
 		const freezeButton = document.createElement('button');
 		freezeButton.innerText = 'Freeze';
-		freezeButton.onclick = function() {
-			ingredientSelect.setAttribute('disabled', true);
-			evt.target.removeAttribute('disabled');
-			freezeButton.setAttribute('disabled', true);
-			//var o = document.getElementById(ingredient._id);
-			ingredientJSON[optionEl.innerText] = quantityInput.value;
-		}
-		console.log(ingredientJSON);
+		freezeButton.onclick = (function() {
+			return function() {
+				ingredientSelect.setAttribute('disabled', true);
+				evt.target.removeAttribute('disabled');
+				freezeButton.setAttribute('disabled', true);
+				//var o = document.getElementById(ingredient._id);
+				ingredientJSON.push({_id: ingredientSelect.value, quantity: quantityInput.value});
+			}
+		})();
+
 		currentIngredients.appendChild(freezeButton);
 	}
 }
