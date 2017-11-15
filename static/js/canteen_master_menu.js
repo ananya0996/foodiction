@@ -147,7 +147,7 @@ function CreateMasterMenuItem() {
 
 		tbody.appendChild(newRow);
 	}
-	/*document.getElementById("Item").value='';
+	document.getElementById("Item").value='';
 	document.getElementById("Price").value='';
 	const xhr1 = new XMLHttpRequest();
 	xhr1.onreadystatechange = function() {
@@ -161,7 +161,7 @@ function CreateMasterMenuItem() {
 	}
 	xhr1.open('post', '/api/ingredient');
 	xhr1.setRequestHeader('Content-Type', 'application/json');
-	xhr1.send(JSON.stringify(ingredientJSON));*/
+	xhr1.send(JSON.stringify(ingredientJSON));
 	//document.getElementById("Item").value='';
 	//document.getElementById("Price").value='';
 	document.location.reload();
