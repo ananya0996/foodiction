@@ -50,7 +50,7 @@ function run(db) {
 	};
 
 	const inventoryJob = new cron.CronJob({
-		cronTime: ' * * *',
+		cronTime: '00 05 * * * *', // Y '00 00 18 * * *'
 		onTick: async () => {
 			// TODO
 		},

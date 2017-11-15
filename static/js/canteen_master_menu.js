@@ -92,6 +92,7 @@ function CreateMasterMenuItem() {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
 				updateTable(nameInp, rateInp, response.success);
+				ingredientJSON = [];
 			}
 		}
 	}

@@ -20,7 +20,7 @@ module.exports = function (db) {
 
 	// Create new ingredient
 	router.post('/', (req, res) => {
-		ingredientsCollection.insert({name: req.body.name, price: req.body.price, quantity: 0}, (err, result) => {
+		ingredientsCollection.insert({name: req.body.name, price: parseInt(req.body.price, 10), quantity: 0}, (err, result) => {
 			if (err) {
 				return res.json({error: 'Unable to insert ingredient'});
 			}
@@ -31,7 +31,7 @@ module.exports = function (db) {
 
 	// Update a particular ingredient
 	router.put('/:id', (req, res) => {
-		ingredientsCollection.updateOne({_id: objectID(req.params.id)}, {$inc: {quantity: req.body.quantity}}, err => {
+		ingredientsCollection.updateOne({_id: objectID(req.params.id)}, {$inc: {quantity: parseInt(req.body.quantity, 10)}}, err => {
 			if (err) {
 				return res.json({error: 'Unable to update quantity'});
 			}

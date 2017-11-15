@@ -50,6 +50,7 @@ module.exports = function (db) {
 
 	// Create new master menu item
 	router.post('/master_menu_item', (req, res) => {
+		req.body.ingredients = req.body.ingredients.map(ingredient => Object.assign(ingredient, {quantity: parseInt(ingredient.quantity, 10)}));
 		itemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate, indailymenu: false, ingredients: req.body.ingredients}}, {upsert: true}, (err, result) => {
 			if (err) {
 				return res.json({error: 'Unable to insert item'});
