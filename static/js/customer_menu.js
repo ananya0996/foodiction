@@ -147,12 +147,23 @@ function searchItem(itemid)
 
 function checkout()
 {
-	xhr = new XMLHttpRequest();
-	xhr.open("post", "/api/order", true); // INTEGRATE
-	xhr.onreadystatechange = checkOrderStatus;
-	xhr.setRequestHeader("Content-Type", "application/json");
-	//alert(JSON.stringify(cartItems));
-	xhr.send(JSON.stringify({items: cartItems}));
+	if(cartItems.length > 0)
+	{
+		var total = document.getElementById("total");
+		var totval = parseInt(total.innerHTML);
+		localStorage.setItem("orderTot", totval);
+
+		xhr = new XMLHttpRequest();
+		xhr.open("post", "/api/order", true); // INTEGRATE
+		xhr.onreadystatechange = checkOrderStatus;
+		xhr.setRequestHeader("Content-Type", "application/json");
+		//alert(JSON.stringify(cartItems));
+		xhr.send(JSON.stringify({items: cartItems}));
+	}
+	else
+	{
+		alert("Your cart is empty!");
+	}
 }
 
 function checkOrderStatus()
@@ -162,14 +173,15 @@ function checkOrderStatus()
 		var response = JSON.parse(xhr.responseText);
 		if(!response.success)
 		{
-			alert("Error placing order! Please retry.");
+			//alert("Error placing order! Please retry.");
+			window.location.assign("/customer/order_error");
 		}
 		else
 		{
 			//location.replace("orderplaced.html?orderNumber=" + orderNumber);
 			//alert("Your order has been placed! ID: " + response.success);
 			localStorage.setItem("orderID", response.success);
-			window.location.assign("/customer/order_placed");
+			window.location.assign("/customer/process_payment");
 
 			//clean localStorage here?
 		}
