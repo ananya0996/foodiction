@@ -22,7 +22,7 @@ module.exports = function (db, wss) {
 		}
 		cursor.toArray((err, orders) => {
 			if (err) {
-				res.json({error: 'Unable to fetch orders'});
+				return res.json({error: 'Unable to fetch orders'});
 			}
 			res.json({success: orders});
 		});
@@ -32,7 +32,7 @@ module.exports = function (db, wss) {
 	router.post('/', (req, res) => {
 		ordersCollection.insert({items: req.body.items, status: -1}, (err, result) => {
 			if (err) {
-				res.json({error: 'Unable to insert order'});
+				return res.json({error: 'Unable to insert order'});
 			}
 			res.json({success: result.insertedIds[0]});
 		});
@@ -49,7 +49,7 @@ module.exports = function (db, wss) {
 		}
 		ordersCollection.updateOne({_id: objectID(req.params.id)}, update, err => {
 			if (err) {
-				res.json({error: `Unable to change status of order ${req.params.id} to ${req.body.status}`});
+				return res.json({error: `Unable to change status of order ${req.params.id} to ${req.body.status}`});
 			}
 			ordersCollection.find({_id: objectID(req.params.id)}).toArray((err, findResult) => {
 				if (err) {
@@ -69,7 +69,7 @@ module.exports = function (db, wss) {
 	router.delete('/:id', (req, res) => {
 		ordersCollection.deleteOne({_id: objectID(req.params.id)}, err => {
 			if (err) {
-				res.json({error: `Unable to delete order ${req.params.id}`});
+				return res.json({error: `Unable to delete order ${req.params.id}`});
 			}
 
 			res.json({success: `Removed order ${req.params.id}`});

@@ -12,7 +12,7 @@ module.exports = function (db) {
 	router.get('/', (req, res) => {
 		itemsCollection.find({indailymenu: true}).toArray((err, items) => {
 			if (err) {
-				res.json({error: 'Unable to fetch items'});
+				return res.json({error: 'Unable to fetch items'});
 			}
 			res.json({success: items});
 		});
@@ -22,7 +22,7 @@ module.exports = function (db) {
 	router.get('/master_menu_items', (req, res) => {
 		itemsCollection.find({}).toArray((err, items) => {
 			if (err) {
-				res.json({error: 'Unable to fetch items'});
+				return res.json({error: 'Unable to fetch items'});
 			}
 			res.json({success: items});
 		});
@@ -32,7 +32,7 @@ module.exports = function (db) {
 	router.post('/', (req, res) => {
 		itemsCollection.updateOne({_id: objectID(req.body.id)}, {$set: {indailymenu: true}}, {upsert: true}, (err, result) => {
 			if (err) {
-				res.json({error: 'Unable to insert item'});
+				return res.json({error: 'Unable to insert item'});
 			}
 
 			res.json({success: result.modifiedCount});
@@ -42,7 +42,7 @@ module.exports = function (db) {
 	router.delete('/:id', (req, res) => {
 		itemsCollection.updateOne({_id: objectID(req.params.id)}, {$set: {indailymenu: false}}, err => {
 			if (err) {
-				res.json({error: `Unable to delete item ${req.params.id}`});
+				return res.json({error: `Unable to delete item ${req.params.id}`});
 			}
 			res.json({success: `Removed item ${req.params.id}`});
 		});
@@ -52,7 +52,7 @@ module.exports = function (db) {
 	router.post('/master_menu_item', (req, res) => {
 		itemsCollection.updateOne({name: req.body.name, rate: req.body.rate}, {$set: {name: req.body.name, rate: req.body.rate, indailymenu: false}}, {upsert: true}, (err, result) => {
 			if (err) {
-				res.json({error: 'Unable to insert item'});
+				return res.json({error: 'Unable to insert item'});
 			}
 			res.json({success: result.upsertedId});
 		});
@@ -62,7 +62,7 @@ module.exports = function (db) {
 	router.get('/:id', (req, res) => {
 		itemsCollection.findOne({_id: objectID(req.params.id)}, (err, item) => {
 			if (err) {
-				res.json({error: `Unable to fetch item ${req.params.id}`});
+				return res.json({error: `Unable to fetch item ${req.params.id}`});
 			}
 
 			res.json({success: item});
@@ -73,7 +73,7 @@ module.exports = function (db) {
 	router.delete('/master_menu_item/:id', (req, res) => {
 		itemsCollection.deleteOne({_id: objectID(req.params.id)}, err => {
 			if (err) {
-				res.json({error: `Unable to delete item ${req.params.id}`});
+				return res.json({error: `Unable to delete item ${req.params.id}`});
 			}
 			res.json({success: `Removed item ${req.params.id}`});
 		});

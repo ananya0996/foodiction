@@ -12,7 +12,7 @@ module.exports = function (db) {
 	router.get('/', (req, res) => {
 		ingredientsCollection.find({}).toArray((err, ingredients) => {
 			if (err) {
-				res.json({error: 'Unable to fetch ingredients'});
+				return res.json({error: 'Unable to fetch ingredients'});
 			}
 			res.json({success: ingredients});
 		});
@@ -20,9 +20,9 @@ module.exports = function (db) {
 
 	// Create new ingredient
 	router.post('/', (req, res) => {
-		ingredientsCollection.insert({name: req.body.name, quantity: req.body.qnty}, (err, result) => {
+		ingredientsCollection.insert({name: req.body.name, quantity: req.body.quantity}, (err, result) => {
 			if (err) {
-				res.json({error: 'Unable to insert ingredient'});
+				return res.json({error: 'Unable to insert ingredient'});
 			}
 
 			res.json({success: result.insertedIds[0]});
@@ -30,15 +30,26 @@ module.exports = function (db) {
 	});
 
 	// Update a particular ingredient
-	router.put('/:id', () => {
+	router.put('/:id', (req, res) => {
+		ingredientsCollection.updateOne({_id: objectID(req.params.id)}, {$inc: {quantity: req.body.quantity}}, err => {
+			if (err) {
+				return res.json({error: 'Unable to update quantity'});
+			}
+			ingredientsCollection.find({_id: objectID(req.params.id)}).toArray(err => {
+				if (err) {
+					return res.json({error: 'Unable to update quantity'});
+				}
 
+				return res.json({success: 'Updated quantity'});
+			});
+		});
 	});
 
 	// Delete a particular ingredient
 	router.delete('/:id', (req, res) => {
 		ingredientsCollection.deleteOne({_id: objectID(req.params.id)}, err => {
 			if (err) {
-				res.json({error: `Unable to delete ingredient ${req.params.id}`});
+				return res.json({error: `Unable to delete ingredient ${req.params.id}`});
 			}
 
 			res.json({success: `Removed ingredient ${req.params.id}`});
