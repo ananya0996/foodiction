@@ -1,5 +1,6 @@
 var cartItems = 0;
 var idno = 4;
+var ingredientJSON = {};
 
 let ingredients = null;
 
@@ -79,6 +80,9 @@ function fetchMasterMenuItems() {
 }
 
 function CreateMasterMenuItem() {
+
+	
+
 	var nameInp = document.getElementById("Item").value;
 	var rateInp = document.getElementById("Price").value;
 
@@ -143,6 +147,24 @@ function CreateMasterMenuItem() {
 
 		tbody.appendChild(newRow);
 	}
+	/*document.getElementById("Item").value='';
+	document.getElementById("Price").value='';
+	const xhr1 = new XMLHttpRequest();
+	xhr1.onreadystatechange = function() {
+		if(xhr1.readyState === 4 && xhr1.status === 200) {
+			const response = JSON.parse(xhr1.responseText);
+			if(response.success) {
+				console.log(response.success);
+				//updateTable(nameInp, rateInp, response.success);
+			}
+		}
+	}
+	xhr1.open('post', '/api/ingredient');
+	xhr1.setRequestHeader('Content-Type', 'application/json');
+	xhr1.send(JSON.stringify(ingredientJSON));*/
+	//document.getElementById("Item").value='';
+	//document.getElementById("Price").value='';
+	document.location.reload();
 }
 
 function RemoveMasterMenuItem() {
@@ -204,7 +226,7 @@ function ToggleDailyMenu() {
 
 document.querySelector('#add-ingredient').addEventListener('click', addIngredient);
 function addIngredient(evt) {
-	evt.preventDefault();
+	//evt.preventDefault();
 	console.log('here');
 	if(ingredients == null) {
 		const xhr = new XMLHttpRequest();
@@ -214,6 +236,7 @@ function addIngredient(evt) {
 				const response = JSON.parse(xhr.responseText);
 				if(response.success) {
 					ingredients = response.success;
+					//console.log(ingredients);
 					addIngredient(evt);
 				}
 			}
@@ -226,16 +249,19 @@ function addIngredient(evt) {
 
 	function createIngredientForm() {
 		evt.target.setAttribute('disabled', true);
+		//console.log('here1');
 		const currentIngredients = document.querySelector('#current-ingredients');
 		const newIngredient = document.createElement('div');
 		newIngredient.classList.add('new-ingredient');
+		var optionEl; 
 		const ingredientSelect = document.createElement('select');
 		const currentIngredientSet = new Set(Array.from(document.querySelectorAll('.new-ingredient > select')).map(el => el.value));
 		const available = ingredients.filter(ingredient => !currentIngredientSet.has(ingredient._id));
+		console.log(available.length);
 		if(!available.length) return;
-
+		console.log('here1');
 		available.forEach((ingredient) => {
-			const optionEl = document.createElement('option');
+			optionEl = document.createElement('option');
 			optionEl.innerText = ingredient.name;
 			optionEl.setAttribute('value', ingredient._id);
 			ingredientSelect.appendChild(optionEl);
@@ -256,7 +282,10 @@ function addIngredient(evt) {
 			ingredientSelect.setAttribute('disabled', true);
 			evt.target.removeAttribute('disabled');
 			freezeButton.setAttribute('disabled', true);
+			//var o = document.getElementById(ingredient._id);
+			ingredientJSON[optionEl.innerText] = quantityInput.value;
 		}
+		console.log(ingredientJSON);
 		currentIngredients.appendChild(freezeButton);
 	}
 }

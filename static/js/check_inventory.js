@@ -9,6 +9,7 @@ function fetchInventory() {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
 				itemsList = response.success;
+				console.log(itemsList);
 				dispItems();
 			}
 		}
@@ -28,6 +29,7 @@ function fetchInventory() {
 			var idcol = document.createElement("td");
 			var namecol = document.createElement("td");
 			var qntycol = document.createElement("td");
+			var prccol = document.createElement("td");
 			var rmcol = document.createElement("td");
 
 			var img = document.createElement("img");
@@ -69,6 +71,7 @@ function fetchInventory() {
 			newRow.appendChild(idcol);
 			newRow.appendChild(namecol);
 			newRow.appendChild(qntycol);
+			newRow.appendChild(prccol);
 			newRow.appendChild(rmcol);
 
 			tbody.appendChild(newRow);
@@ -79,14 +82,15 @@ function fetchInventory() {
 function CreateItem() {
 	var nameInp = document.getElementById("Item").value;
 	var qntyInp = document.getElementById("Quantity").value;
-
+	var prcInp = document.getElementById("Price").value;
+	
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
 				console.log('response ' + response.success);
-				updateTable(nameInp, qntyInp, response.success);
+				updateTable(nameInp, qntyInp, prcInp, response.success);
 			}
 		}
 	}
@@ -94,10 +98,11 @@ function CreateItem() {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		name: nameInp,
-		qnty: qntyInp
+		qnty: qntyInp,
+		prc: prcInp,
 	}));
 
-	function updateTable(nameInp, qntyInp, idno) {
+	function updateTable(nameInp, qntyInp, prcInp, idno) {
 		console.log(idno)
 		var tbody = document.getElementById("tbody");
 
@@ -107,6 +112,7 @@ function CreateItem() {
 		var namecol = document.createElement("td");
 		var idcol = document.createElement("td");
 		var qntycol = document.createElement("td");
+		var prccol = document.createElement("td");
 		var rmcol = document.createElement("td");
 		var img = document.createElement("img");
 		img.src = "/images/food.png";
@@ -121,6 +127,9 @@ function CreateItem() {
 
 		qntycol.id = "qnty" + idno;
 		qntycol.innerHTML = qntyInp;
+		
+		prccol.id = "prc" + idno;
+		prccol.innerHTML = prcInp / qntyInp;
 
 		var rm = document.createElement("button");
 		rm.id = idno;
@@ -133,10 +142,15 @@ function CreateItem() {
 		newRow.appendChild(idcol);
 		newRow.appendChild(namecol);
 		newRow.appendChild(qntycol);
+		newRow.appendChild(prccol);
 		newRow.appendChild(rmcol);
 
 		tbody.appendChild(newRow);
 	}
+	//document.getElementById("Item").value='';
+	//document.getElementById("Quantity").value='';
+	//document.getElementById("Price").value='';
+	document.location.reload();
 }
 
 function RemoveMasterMenuItem() {
