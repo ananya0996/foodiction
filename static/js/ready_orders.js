@@ -8,7 +8,7 @@ function updateServicedOrders() //initiate request
 	ws = new WebSocket('ws://localhost:8888');
 
 	xhr = new XMLHttpRequest();
-	xhr.open("get", "/api/item");
+	xhr.open("get", "/api/order/");
 	xhr.onreadystatechange = fetchOrders;
 	xhr.send();
 }
@@ -20,6 +20,8 @@ function fetchOrders() //fetch serviced orders
 		var response = JSON.parse(xhr.responseText);
 		if(response.success)
 		{
+			showPastOrders(response.success);
+			//console.log("resp:" + response.success);
 			orderXHR = new XMLHttpRequest();
 			orderXHR.open("get", "/api/order?status=1");
 			orderXHR.send();
@@ -34,6 +36,14 @@ function fetchOrders() //fetch serviced orders
 	}
 }
 
+function showPastOrders(ordersList)
+{
+	for(var i = 0; i < ordersList.length; ++i)
+	{
+		displayOrder(ordersList[i]._id);
+	}
+}
+
 function displayOrder(orderID) //display the serviced orders
 {
 	var hexorderID = orderID.slice(-3);
@@ -41,3 +51,5 @@ function displayOrder(orderID) //display the serviced orders
 	document.getElementById("order" + serviceNum).innerHTML = servicedOrderID;
 	serviceNum = (serviceNum == 9) ? 1 : serviceNum + 1;
 }
+
+//Authors: Ananya Pandey, Aniruddh Iyer

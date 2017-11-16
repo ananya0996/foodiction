@@ -75,9 +75,9 @@ function addToCart()
 	var itemid = e.id.slice(3);
 	var qty = document.getElementById("qty" + itemid).value;
 	qty = parseInt(qty);
-	if(qty > 5)
+	if(qty > 15)
 	{
-		qty = 5;
+		qty = 15;
 	}
 	var rate = document.getElementById("rate" + itemid).innerHTML;
 	rate = parseInt(rate);
