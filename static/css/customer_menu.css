@@ -1,6 +1,12 @@
 #nav
 {
 	background-color: #98FB98;
+	font-size: 50px;
+}
+
+body
+{
+	text-align: center;
 }
 
 .food-img
@@ -11,7 +17,8 @@
 .addbutton
 {
 	background-color: #98FB98;
-	border: 1px solid black;
+	border: 1px dashed white;
+	border-radius: 10px;
 }
 
 .cart

@@ -92,6 +92,7 @@ function CreateMasterMenuItem() {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
 				updateTable(nameInp, rateInp, response.success);
+				ingredientJSON = [];
 			}
 		}
 	}
@@ -257,6 +258,7 @@ function addIngredient(evt) {
 
 		const freezeButton = document.createElement('button');
 		freezeButton.innerText = 'Freeze';
+		freezeButton.className = "addbutton";
 		freezeButton.onclick = (function() {
 			return function() {
 				ingredientSelect.setAttribute('disabled', true);

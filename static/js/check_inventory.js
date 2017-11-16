@@ -3,6 +3,7 @@ var idno = 4;
 
 function fetchInventory() {
 	var itemsList;
+	const ws = new WebSocket('ws://localhost:8888');
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
@@ -12,11 +13,24 @@ function fetchInventory() {
 				itemsList = response.success;
 				console.log(itemsList);
 				dispItems();
+				ws.addEventListener('message', ({data}) => {
+					data = JSON.parse(data);
+					if(data.inventoryUpdate) {
+						itemsList = data.inventoryUpdate;
+						const isCritical = itemsList.filter(item => item.quantity < 0).length > 0;
+						if(isCritical) {
+							alert('Inventory quantities are insufficient for 1 or more ingredients');
+						}
+						document.getElementById("tbody").innerHTML = '';
+						dispItems();
+					}
+				});
 			}
 		}
 	}
 	xhr.open('get', '/api/ingredient/');
 	xhr.send(null);
+
 
 	function dispItems()
 	{
@@ -62,7 +76,7 @@ function fetchInventory() {
 			rmcol.appendChild(rm);
 
 			newRow.appendChild(imgcol);
-			newRow.appendChild(idcol);
+			//newRow.appendChild(idcol);
 			newRow.appendChild(namecol);
 			newRow.appendChild(qntycol);
 			newRow.appendChild(prccol);
@@ -70,12 +84,12 @@ function fetchInventory() {
 
 			tbody.appendChild(newRow);
 		}
-			var quan = document.createElement("input");
+			/*var quan = document.createElement("input");
 			quan.id = "updateQuantity";
 			quan.setAttribute('type', 'number');
 			quan.setAttribute('value', '0');
 			document.getElementById("quantity").appendChild(quan);
-	}
+	*/}
 }
 
 function CreateItem() {
@@ -121,7 +135,7 @@ function CreateItem() {
 		namecol.id = "name" + idno;
 
 		idcol.id = idno;
-		idcol.innerHTML = idno;
+		idcol.innerHTML = parseInt("0x" + idno.slice(-3));
 
 		qntycol.id = "qnty" + idno;
 		qntycol.innerHTML = qntyInp;
@@ -137,7 +151,7 @@ function CreateItem() {
 		rmcol.appendChild(rm);
 
 		newRow.appendChild(imgcol);
-		newRow.appendChild(idcol);
+		//newRow.appendChild(idcol);
 		newRow.appendChild(namecol);
 		newRow.appendChild(qntycol);
 		newRow.appendChild(prccol);
@@ -167,7 +181,6 @@ function RemoveMasterMenuItem() {
 	xhr.send(null);
 
 }
-
 function updateIngredient()
 {
 	var e = document.getElementById("ingredient-select");

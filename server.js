@@ -1,5 +1,6 @@
 const http = require('http');
 const path = require('path');
+const util = require('util');
 const express = require('express');
 const ws = require('ws');
 const session = require('express-session');
@@ -50,9 +51,30 @@ function run(db) {
 	};
 
 	const inventoryJob = new cron.CronJob({
-		cronTime: ' * * *',
+		cronTime: '* * * * *', // Y '00 00 18 * * *' '00 05 * * * *'
 		onTick: async () => {
-			// TODO
+			const itemsCollection = db.collection('items');
+			const ingredientsCollection = db.collection('ingredients');
+			itemsCollection.aggregate = util.promisify(itemsCollection.aggregate);
+			ingredientsCollection.update = util.promisify(ingredientsCollection.update);
+
+			console.log('tick');
+			try {
+				const aggrResult = await itemsCollection.aggregate([
+					{$match: {indailymenu: true}},
+					{$unwind: '$ingredients'},
+					{$project: {_id: 1, ingredients: {_id: '$ingredients._id', quantity: {$multiply: ['$ingredients.quantity', 100]}}}},
+					{$group: {_id: '$ingredients._id', quantity: {$sum: '$ingredients.quantity'}}},
+					{$lookup: {from: 'ingredients', localField: '_id', foreignField: '_id', as: 'actualItem'}},
+					{$project: {_id: 1, toSubtract: '$quantity', actualItem: {$arrayElemAt: ['$actualItem', 0]}}},
+					{$project: {_id: 1, name: '$actualItem.name', price: '$actualItem.price', quantity: {$subtract: ['$actualItem.quantity', '$toSubtract']}}}
+				]);
+				await Promise.all(aggrResult.map(ingredientDoc => ingredientsCollection.update({_id: ingredientDoc._id}, ingredientDoc)));
+				console.log(JSON.stringify({inventoryUpdate: aggrResult}));
+				wss.broadcast(JSON.stringify({inventoryUpdate: aggrResult}));
+			} catch (err) {
+				console.log(err);
+			}
 		},
 		start: false,
 		timeZone: 'Asia/Kolkata'
