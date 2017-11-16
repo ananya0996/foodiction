@@ -70,8 +70,12 @@ function run(db) {
 					{$project: {_id: 1, name: '$actualItem.name', price: '$actualItem.price', quantity: {$subtract: ['$actualItem.quantity', '$toSubtract']}}}
 				]);
 				await Promise.all(aggrResult.map(ingredientDoc => ingredientsCollection.update({_id: ingredientDoc._id}, ingredientDoc)));
-				console.log(JSON.stringify({inventoryUpdate: aggrResult}));
-				wss.broadcast(JSON.stringify({inventoryUpdate: aggrResult}));
+				const cursor = ingredientsCollection.find({});
+				cursor.toArray = util.promisify(cursor.toArray);
+				const ingredients = await cursor.toArray();
+				console.log(ingredients);
+				console.log(JSON.stringify({inventoryUpdate: ingredients}));
+				wss.broadcast(JSON.stringify({inventoryUpdate: ingredients}));
 			} catch (err) {
 				console.log(err);
 			}
