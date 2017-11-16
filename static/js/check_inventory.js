@@ -8,8 +8,10 @@ function fetchInventory() {
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
+			console.log(response);
 			if(response.success) {
 				itemsList = response.success;
+				console.log(itemsList);
 				dispItems();
 				ws.addEventListener('message', ({data}) => {
 					data = JSON.parse(data);
@@ -45,6 +47,12 @@ function fetchInventory() {
 			var prccol = document.createElement("td");
 			var rmcol = document.createElement("td");
 
+			var ingred = document.createElement("option");
+			ingred.innerText = curr_item.name;
+			ingred.id = curr_item._id;
+			var selector = document.getElementById("ingredient-select");
+			selector.appendChild(ingred);
+
 			var img = document.createElement("img");
 			img.src = "/images/food.png";
 			img.className = "img-rounded food-img imsize";
@@ -76,7 +84,12 @@ function fetchInventory() {
 
 			tbody.appendChild(newRow);
 		}
-	}
+			/*var quan = document.createElement("input");
+			quan.id = "updateQuantity";
+			quan.setAttribute('type', 'number');
+			quan.setAttribute('value', '0');
+			document.getElementById("quantity").appendChild(quan);
+	*/}
 }
 
 function CreateItem() {
@@ -89,6 +102,7 @@ function CreateItem() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
+				console.log("Gets called");
 				updateTable(nameInp, qntyInp, prcInp, response.success);
 			}
 		}
@@ -97,6 +111,7 @@ function CreateItem() {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		name: nameInp,
+		qnty: qntyInp, 
 		price: parseFloat(prcInp) / parseFloat(qntyInp),
 	}));
 
@@ -144,10 +159,9 @@ function CreateItem() {
 
 		tbody.appendChild(newRow);
 	}
-	//document.getElementById("Item").value='';
-	//document.getElementById("Quantity").value='';
-	//document.getElementById("Price").value='';
-	document.location.reload();
+	document.getElementById("Item").value='';
+	document.getElementById("Quantity").value='';
+	document.getElementById("Price").value='';
 }
 
 function RemoveMasterMenuItem() {
@@ -167,3 +181,26 @@ function RemoveMasterMenuItem() {
 	xhr.send(null);
 
 }
+function updateIngredient()
+{
+	var e = document.getElementById("ingredient-select");
+	var itemId = e.options[e.selectedIndex].id;
+	var nameInp = e.value;
+	var qntyInp = document.getElementById("updateQuantity").value;
+	const xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState === 4 && xhr.status === 200) {
+			const response = JSON.parse(xhr.responseText);
+			if(response.success) {
+				document.location.reload();
+			}
+		}
+	}
+	xhr.open('put', '/api/ingredient/' + itemId);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+
+	xhr.send(JSON.stringify({
+		quantity: qntyInp, 
+	}));
+}
+
