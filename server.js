@@ -16,16 +16,14 @@ function run(db) {
 	const app = express();
 
 	// HTTP Server Middleware
+	app.use(session({
+		secret: 'keyboard cat',
+		resave: false,
+		saveUninitialized: true
+	}));
 	app.use(bodyParser.urlencoded({extended: false}));
 	app.use(bodyParser.json());
-	app.use(session({
-		secret: 'keyboard cat', // Eventually from config
-		resave: false,
-		saveUninitialized: true,
-		cookie: {
-			secure: true
-		}
-	}));
+
 	app.use(express.static('./static'));
 
 	// HTTP Server Routes
@@ -38,8 +36,8 @@ function run(db) {
 
 	app.use('/customer', customerRoutes(db, wss));
 	app.use('/canteen', canteenRoutes(db, wss));
-	app.use('/api/ingredient', ingredientApiRoutes(db));
-	app.use('/api/item', itemApiRoutes(db));
+	app.use('/api/ingredient', ingredientApiRoutes(db, wss));
+	app.use('/api/item', itemApiRoutes(db, wss));
 	app.use('/api/order', orderApiRoutes(db, wss));
 
 	wss.broadcast = function (data) {
@@ -73,8 +71,6 @@ function run(db) {
 				const cursor = ingredientsCollection.find({});
 				cursor.toArray = util.promisify(cursor.toArray);
 				const ingredients = await cursor.toArray();
-				console.log(ingredients);
-				console.log(JSON.stringify({inventoryUpdate: ingredients}));
 				wss.broadcast(JSON.stringify({inventoryUpdate: ingredients}));
 			} catch (err) {
 				console.log(err);

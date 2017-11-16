@@ -30,6 +30,7 @@ module.exports = function (db, wss) {
 
 	// Create a new order
 	router.post('/', (req, res) => {
+		req.body.items = req.body.items.map(item => ({id: objectID(item.id), qty: item.qty}));
 		ordersCollection.insert({items: req.body.items, status: -1}, (err, result) => {
 			if (err) {
 				return res.json({error: 'Unable to insert order'});
