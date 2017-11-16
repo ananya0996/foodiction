@@ -1,10 +1,36 @@
 .bgheading {
 	background-color: #98FB98;
 }
-.welcome {
+.inventory{
+	display: table;
+  	margin-right: auto;
+  	margin-left: auto;
+  	border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px; 
 	font-size: 20px;
 	font-family: cursive;
 	font-style: italic;
+}
+.welcome {
+	border-radius: 25px;
+    border: 2px solid #bf1360;
+    padding: 20px; 
+	font-size: 20px;
+	font-family: cursive;
+	font-style: italic;
+	width:50%;
+	float: left;
+}
+.welcome1 {
+	border-radius: 25px;
+    border: 2px solid #046e99;
+    padding: 20px; 
+	font-size: 20px;
+	font-family: cursive;
+	font-style: italic;
+	width:50%;
+	float: left;
 }
 .rmbutton {
 	background-color: #FF0000;
@@ -34,4 +60,9 @@ table {
 .backgroundgrey {
 	background-color: #404040;
 	color: white;
+}
+h3{
+	border-radius: 25px;
+    background: #98FB98;
+    padding: 5px; 
 }

@@ -11,26 +11,27 @@
 	<body onload = "fetchInventory()">
 		<center class = "bgheading"><h1> FOODICTION SERVICES <h1></center>
 		<br/><br/><br/>
-		<center>
-			<p class = "welcome"><img src = "/images/food.png" width = "50px" height = "50px"/> INVENTORY <img src = "/images/food.png" width = "50px" height = "50px"/></p>
+			<p class="inventory"><img src = "/images/food.png" width = "50px" height = "50px"/> INVENTORY <img src = "/images/food.png" width = "50px" height = "50px"/></p>
 			<br/><br/><br/>
 			<table class = "table table-striped">
 				<thead>
 					<tr>
 						<th class = "centeralign">Image</th>
-						<th class = "centeralign">Item-Id</th>
+						<th class = "centeralign">Ingredient-Id</th>
 						<th class = "centeralign">Name</th>
 						<th class = "centeralign">Quantity</th>
 						<th class = "centeralign">Price</th>
-						<th class = "centeralign">Remove This Item</th>
+						<th class = "centeralign">Remove This Ingredient</th>
 					</tr>
 				</thead>
 				<tbody id = "tbody">
 
 				</tbody>
 			</table>
+			<center>
 			<div class = "welcome">
-				Enter the Item Name: <input type = "text" class = "form-control" id = "Item" name = "Item" value = ""/>
+			<h3>New Ingredients</h3>
+				Enter the Ingredient Name: <input type = "text" class = "form-control" id = "Item" name = "Item" value = ""/>
 				<br/>
 				Enter the Quantity: <input type = "text" class = "form-control" id = "Quantity" name = "Quantity" value = ""/>
 				<br/>
@@ -38,7 +39,15 @@
 				<br/>
 				<input type = "button" class = "btn-lg" id = "addItem" name = "addItem" value = "Add Item" onclick = "CreateItem()"/>
 			</div>
-
+			<div class = "welcome1">
+			<h3>Update Ingredients</h3>
+			Choose the Ingredient:
+			<select id="ingredient-select">
+			</select>
+			</br></br>
+			<p id="quantity">Enter the Quantity:</p></br></br>
+				<input type = "button" class = "btn-lg" id = "updateItem" name = "updateItem" value = "Update" onclick = "updateIngredient()"/>
+			</div>
 		</center>
 	</body>
 </html>

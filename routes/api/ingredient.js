@@ -31,7 +31,7 @@ module.exports = function (db) {
 
 	// Update a particular ingredient
 	router.put('/:id', (req, res) => {
-		ingredientsCollection.updateOne({_id: objectID(req.params.id)}, {$inc: {quantity: req.body.quantity}}, err => {
+		ingredientsCollection.updateOne({_id: objectID(req.params.id)}, {$inc: {quantity: parseInt(req.body.quantity, 10)}}, err => {
 			if (err) {
 				return res.json({error: 'Unable to update quantity'});
 			}

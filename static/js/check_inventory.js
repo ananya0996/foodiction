@@ -7,8 +7,10 @@ function fetchInventory() {
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
+			console.log(response);
 			if(response.success) {
 				itemsList = response.success;
+				console.log(itemsList);
 				dispItems();
 			}
 		}
@@ -30,6 +32,12 @@ function fetchInventory() {
 			var qntycol = document.createElement("td");
 			var prccol = document.createElement("td");
 			var rmcol = document.createElement("td");
+
+			var ingred = document.createElement("option");
+			ingred.innerText = curr_item.name;
+			ingred.id = curr_item._id;
+			var selector = document.getElementById("ingredient-select");
+			selector.appendChild(ingred);
 
 			var img = document.createElement("img");
 			img.src = "/images/food.png";
@@ -62,6 +70,11 @@ function fetchInventory() {
 
 			tbody.appendChild(newRow);
 		}
+			var quan = document.createElement("input");
+			quan.id = "updateQuantity";
+			quan.setAttribute('type', 'number');
+			quan.setAttribute('value', '0');
+			document.getElementById("quantity").appendChild(quan);
 	}
 }
 
@@ -75,6 +88,7 @@ function CreateItem() {
 		if(xhr.readyState === 4 && xhr.status === 200) {
 			const response = JSON.parse(xhr.responseText);
 			if(response.success) {
+				console.log("Gets called");
 				updateTable(nameInp, qntyInp, prcInp, response.success);
 			}
 		}
@@ -83,6 +97,7 @@ function CreateItem() {
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		name: nameInp,
+		qnty: qntyInp, 
 		price: parseFloat(prcInp) / parseFloat(qntyInp),
 	}));
 
@@ -130,10 +145,9 @@ function CreateItem() {
 
 		tbody.appendChild(newRow);
 	}
-	//document.getElementById("Item").value='';
-	//document.getElementById("Quantity").value='';
-	//document.getElementById("Price").value='';
-	document.location.reload();
+	document.getElementById("Item").value='';
+	document.getElementById("Quantity").value='';
+	document.getElementById("Price").value='';
 }
 
 function RemoveMasterMenuItem() {
@@ -154,39 +168,26 @@ function RemoveMasterMenuItem() {
 
 }
 
-/*function ToggleDailyMenu() {
-
-	var item = event.target;
-	var itemId = item.id;
-	if(item.className == "addbutton"){
-		const xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4 && xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
-				if(response.success) {
-					item.innerText = "Remove";
-					item.className = "rmbutton";
-				}
+function updateIngredient()
+{
+	var e = document.getElementById("ingredient-select");
+	var itemId = e.options[e.selectedIndex].id;
+	var nameInp = e.value;
+	var qntyInp = document.getElementById("updateQuantity").value;
+	const xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState === 4 && xhr.status === 200) {
+			const response = JSON.parse(xhr.responseText);
+			if(response.success) {
+				document.location.reload();
 			}
 		}
-		xhr.open('post', '/api/item/');
-		xhr.setRequestHeader('Content-Type', 'application/json');
-		xhr.send(JSON.stringify({id: itemId}));
 	}
-	else if(item.className == "rmbutton"){
-		const xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === 4 && xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
-				if(response.success) {
-					item.innerText = "Add";
-					item.className = "addbutton";
-				}
-			}
-		}
-		xhr.open('delete', '/api/item/' + itemId);
-		xhr.send();
-	}
+	xhr.open('put', '/api/ingredient/' + itemId);
+	xhr.setRequestHeader('Content-Type', 'application/json');
 
+	xhr.send(JSON.stringify({
+		quantity: qntyInp, 
+	}));
+}
 
-}*/
