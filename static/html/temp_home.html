@@ -1,17 +1,60 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Foodiction</title>
-  </head>
-  <body>
-    <a href="/customer/menu">Customer interface for viewing menu and placing orders</a><br><br>
-    <hr><br><br>
-    <a href="/canteen/menu">Canteen interface for viewing, adding and deleting menu items</a><br><br>
-    <a href="/canteen/master_menu">Canteen interface for master menu</a><br><br>
-    <a href="/canteen/orders">Canteen interface for viewing (in real time) and servicing orders</a><br><br>
-    <a href="/canteen/inventory">Canteen inventory interface for viewing</a><br><br>
-    <a href="/canteen/ready_orders">Customer-facing interface for <strong>ready orders</strong></a><br><br>
-  </body>
+	<head>
+		<title>Foodiction</title>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<style type="text/css">
+			body
+			{
+				text-align: center;
+			}
+			#orderid_span
+			{
+				font-weight: bold;
+				color: green;
+				font-size: 26px;
+			}
+			.fixedHeight
+			{
+				height: 150px;
+			}
+		</style>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+	<div class = "container-fluid">
+		<div class = "row">
+			<div class = "col-sm-6">
+				<h1>Customer Facing Modules</h1><br><br>
+				<img src = "/images/happycustomer.png" class = "fixedHeight" />
+				<br><br><br>
+
+				<a href="/customer/menu">Order Creation</a>
+			</div>
+
+			<div class = "col-sm-6">
+				<h1>Canteen Facing Modules</h1><br><br>
+				<img src = "/images/foodcounter.png" class = "fixedHeight" />
+				<br><br><br>
+
+				<a href="/canteen/master_menu">Master Menu</a><br><br>
+				<a href="/canteen/menu">Daily Menu</a><br><br>
+				<hr>
+				<a href="/canteen/orders">(Real-time) Incoming Orders</a><br><br>
+				<a href="/canteen/ready_orders">Ready Orders (Common Interface)</a>
+				<hr>
+				<a href="/canteen/inventory">Inventory Status</a><br><br>
+				<a href="/canteen/analytics">Analytics for Sales Improvement</a>
+			</div>
+		</div>
+	</div>
+	</body>
 </html>
-  </body>
+	</body>
 </html>

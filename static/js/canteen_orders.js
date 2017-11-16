@@ -45,7 +45,7 @@ function setupOrders() {
 		tr = document.createElement("tr");
 		tr.id = order["id"];
 		td = document.createElement("td");
-		td.innerHTML = order["id"];
+		td.innerHTML = parseInt("0x" + order["id"].slice(-3)); //changed from order["id"]
 		tr.appendChild(td);
 		td = document.createElement("td");
 		td.innerHTML =  order["items"].map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');
@@ -73,7 +73,7 @@ function setupOrders() {
 			tr = document.createElement("tr");
 			tr.id = "d"+orderArray[i]["_id"];
 			td = document.createElement("td");
-			td.innerHTML = orderArray[i]["_id"];
+			td.innerHTML = parseInt("0x" + orderArray[i]["_id"].slice(-3)); //changed from orderArray[i]["_id"]
 			tr.appendChild(td);
 			td = document.createElement("td");
 			td.innerHTML =  orderArray[i].items.map(item => `${itemsMap.get(item.id)} - ${item.qty}`).join('<br/>');

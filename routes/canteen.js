@@ -34,5 +34,9 @@ module.exports = function () {
 		res.sendFile('html/ready_orders.html', {root: path.join(__dirname, '../static/')});
 	});
 
+	router.get('/analytics', (req, res) => {
+		res.sendFile('html/canteen_analytics.html', {root: path.join(__dirname, '../static/')});
+	});
+
 	return router;
 };

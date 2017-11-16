@@ -8,10 +8,10 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		</head>
 	<body onload = "fetchMasterMenuItems()">
-		<center class = "bgheading"><h1> FOODICTION SERVICES <h1></center>
-		<br/><br/><br/>
+		<center class = "bgheading"><h1> FOODICTION SERVICES<h1></center>
+		<br/>
 		<center>
-			<p class = "welcome"><img src = "/images/food.png" width = "50px" height = "50px"/> EDIT MASTER MENU <img src = "/images/food.png" width = "50px" height = "50px"/></p>
+			<p class = "welcome"><img src = "/images/food.png" width = "50px" height = "50px"/> Master Menu Editing <img src = "/images/food.png" width = "50px" height = "50px"/></p>
 			<br/><br/><br/>
 			<table class = "table table-striped">
 				<thead>
@@ -33,12 +33,14 @@
 				Enter the Price: <input type = "text" class = "form-control" id = "Price" name = "Price" value = ""/>
 				<br/>
 				<div>
-					<h2>Ingredients</h2>
-					<button id="add-ingredient">+</button>
+					<h3>Ingredients Required</h3>
+					<button id="add-ingredient">Add Ingredients +</button>
+					<br><br>
 					<div id="current-ingredients">
 					</div>
 				</div>
-				<input type = "button" class = "btn-lg" id = "addItem" name = "addItem" value = "Add Item" onclick = "CreateMasterMenuItem()"/>
+				<br>
+				<input type = "button" id = "addItem" name = "addItem" value = "Add Item" onclick = "CreateMasterMenuItem()" />
 			</div>
 
 		</center>
