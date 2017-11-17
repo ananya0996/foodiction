@@ -138,7 +138,7 @@ function CreateItem() {
 		idcol.innerHTML = parseInt("0x" + idno.slice(-3));
 
 		qntycol.id = "qnty" + idno;
-		qntycol.innerHTML = qntyInp;
+		qntycol.innerHTML = 0;
 
 		prccol.id = "prc" + idno;
 		prccol.innerHTML = prcInp / qntyInp;
